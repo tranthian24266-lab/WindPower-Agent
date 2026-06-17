@@ -1,14 +1,14 @@
 # Run Guide
 
-## 1. External Model Library
+## 1. Model Library
 
-Required path:
+Preferred bundled path:
 
 ```text
-C:\Users\luzian\Desktop\littlemodel
+C:\Users\luzian\Desktop\windpower_agent3\littlemodel
 ```
 
-Do not modify the model code, weights, or test data there.
+You can also point `WINDPOWER_LITTLEMODEL_ROOT` to an external `littlemodel` path if needed.
 
 ## 2. Backend Startup
 
@@ -68,11 +68,11 @@ Frontend URL:
 ## 6. Sample Files
 
 - Fault diagnosis:
-  `C:\Users\luzian\Desktop\littlemodel\fault_diagnosis\test_data\test_sensor1_x.npy`
+  `C:\Users\luzian\Desktop\windpower_agent3\littlemodel\fault_diagnosis\test_data\test_sensor1_x.npy`
 - RUL prediction:
-  `C:\Users\luzian\Desktop\littlemodel\rul_prediction\test_data\split_60_40\data-20130406T221209Z.mat`
+  `C:\Users\luzian\Desktop\windpower_agent3\littlemodel\rul_prediction\test_data\split_60_40\data-20130406T221209Z.mat`
 - Anomaly detection:
-  `C:\Users\luzian\Desktop\littlemodel\anomaly_detection\test_data\test_data_sample.csv`
+  `C:\Users\luzian\Desktop\windpower_agent3\littlemodel\anomaly_detection\test_data\test_data_sample.csv`
 
 ## 7. Validation Commands
 

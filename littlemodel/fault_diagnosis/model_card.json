@@ -1,0 +1,33 @@
+{
+  "model_id": "nrel_binary_mscnn_bilstm_sensor1",
+  "model_name": "NREL Binary MSCNN-BiLSTM Fault Diagnosis Model",
+  "task_type": "fault_diagnosis",
+  "paper_title": "An intelligent fault diagnosis method for rolling bearings based on multiscale convolutional neural network and bidirectional long short-term memory network",
+  "dataset": "NREL binary healthy vs damaged multisensor supplement",
+  "input_format": [
+    ".mat with sensor1-compatible channel (AN9 preferred, AN8 accepted)",
+    ".csv raw signal column or 4096-column pre-windowed table",
+    ".npy raw signal, [N,4096], or [N,1,4096]"
+  ],
+  "input_channels": [
+    "AN9",
+    "AN8"
+  ],
+  "output_labels": [
+    "healthy",
+    "damaged"
+  ],
+  "default_weight_file": "sensor1_mscnn_bilstm_binary_best.pth",
+  "metrics": {
+    "accuracy": 0.9775,
+    "macro_f1": 0.977489,
+    "healthy_f1": 0.976982,
+    "damaged_f1": 0.977995
+  },
+  "limitations": [
+    "This is a binary healthy/damaged classifier, not a multi-fault classifier.",
+    "The default packaged model is sensor1 only; sensor2 and voting variants are not the platform default.",
+    "Windowing and per-window z-score normalization must match training-time preprocessing."
+  ],
+  "adapter_entrypoint": "inference.py:predict"
+}

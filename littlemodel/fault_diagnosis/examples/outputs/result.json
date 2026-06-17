@@ -1,0 +1,28 @@
+{
+  "task_type": "fault_diagnosis",
+  "model_id": "nrel_binary_mscnn_bilstm_sensor1",
+  "model_name": "NREL Binary MSCNN-BiLSTM Fault Diagnosis Model",
+  "model_version": "1.0.0",
+  "status": "success",
+  "input_file": "C:\\Users\\luzian\\Desktop\\littlemodel\\fault_diagnosis\\test_data\\test_sensor1_x.npy",
+  "prediction": "damaged",
+  "class_id": 1,
+  "confidence": 0.5107591152191162,
+  "class_probabilities": {
+    "healthy": 0.489240825176239,
+    "damaged": 0.5107591152191162
+  },
+  "risk_level": "warning",
+  "summary": "Aggregated 400 windows from sensor1-compatible input and predicted damaged.",
+  "recommendation": "Inspect the gearbox and collect more diagnostic evidence.",
+  "preprocess": {
+    "input_format": ".npy",
+    "num_windows": 400,
+    "window_size": 4096,
+    "stride": 4096
+  },
+  "artifacts": {
+    "result_json": "C:\\Users\\luzian\\Desktop\\littlemodel\\fault_diagnosis\\examples\\outputs\\result.json",
+    "prediction_csv": "C:\\Users\\luzian\\Desktop\\littlemodel\\fault_diagnosis\\examples\\outputs\\prediction.csv"
+  }
+}

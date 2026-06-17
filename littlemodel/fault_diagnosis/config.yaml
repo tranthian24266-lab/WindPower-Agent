@@ -1,0 +1,31 @@
+model:
+  id: nrel_binary_mscnn_bilstm_sensor1
+  name: NREL Binary MSCNN-BiLSTM Fault Diagnosis Model
+  version: 1.0.0
+  default_weight_file: sensor1_mscnn_bilstm_binary_best.pth
+  num_classes: 2
+  class_names:
+    - healthy
+    - damaged
+  scales: [1, 2, 3]
+  lstm_hidden: 64
+  lstm_layers: 1
+  dropout: 0.5
+preprocess:
+  window_size: 4096
+  stride: 4096
+  normalization: per_window_zscore
+  input_formats: [.mat, .csv, .npy]
+  mat_channel_candidates: [AN9, AN8]
+  csv_support:
+    - one numeric column interpreted as a raw signal
+    - 4096 numeric columns interpreted as pre-windowed samples
+inference:
+  aggregation: mean_probability_over_windows
+  labels:
+    healthy: 0
+    damaged: 1
+  risk_logic:
+    healthy: normal
+    damaged_low_confidence: warning
+    damaged_high_confidence: critical

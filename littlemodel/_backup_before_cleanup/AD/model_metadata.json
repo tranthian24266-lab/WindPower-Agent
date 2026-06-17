@@ -1,0 +1,23 @@
+{
+  "method": "decoder",
+  "source_turbine": 13,
+  "target_turbine": 10,
+  "input_dim": 55,
+  "threshold": 0.04287222,
+  "test_f12": 0.6571786649805799,
+  "test_precision": 0.7193795575330614,
+  "test_recall": 0.4882969798657718,
+  "test_accuracy": 0.7126278926045457,
+  "feature_count": 55,
+  "anomaly_score": "RMSE reconstruction error",
+  "label_mapping": {
+    "0": "normal",
+    "1": "anomaly"
+  },
+  "training_config": {
+    "method": "decoder",
+    "epochs": 10,
+    "lr": 0.001,
+    "batch_size": 64
+  }
+}

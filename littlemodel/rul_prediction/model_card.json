@@ -1,0 +1,31 @@
+{
+  "model_id": "hssb_svr_multifeature_60_40",
+  "model_name": "HSSB SVR Multi-feature RUL Prediction Model",
+  "task_type": "rul_prediction",
+  "paper_title": "Application of spectral kurtosis and support vector regression for high-speed shaft bearing prognostics",
+  "dataset": "WindTurbineHighSpeedBearingPrognosis single run-to-failure sequence",
+  "default_weight_file": "svr_demo_multifeature_60_40.joblib",
+  "feature_names": [
+    "sk_area_positive",
+    "kurtosis",
+    "std",
+    "peak_to_peak"
+  ],
+  "rul_unit": "measurement_index",
+  "metrics_raw": {
+    "mae": 5.567150662547664,
+    "rmse": 6.487602864184781,
+    "r2": -0.2658343134850698
+  },
+  "metrics_clipped": {
+    "mae": 5.1360099593836255,
+    "rmse": 6.169532351200968,
+    "r2": -0.14475577240647652
+  },
+  "limitations": [
+    "This is a small demo/reproduction model built from a single run-to-failure trajectory, not an engineering-grade fleet RUL model.",
+    "Raw RUL is the primary prediction. Clipped RUL is included only as a display-safe engineering guard.",
+    "The packaged inference path currently supports only the .mat vibration format used by the local training code."
+  ],
+  "adapter_entrypoint": "inference.py:predict"
+}

@@ -1,0 +1,75 @@
+model:
+  id: scada_ae_decoder_transfer_13_to_10
+  name: SCADA Autoencoder Transfer Anomaly Detection Model
+  version: 1.0.0
+  default_weight_file: best_anomaly_model.pt
+  source_turbine: 13
+  target_turbine: 10
+  method: decoder
+  input_dim: 55
+  threshold: 0.04287222
+feature_names:
+  - sensor_0_avg
+  - wind_speed_3_avg
+  - wind_speed_4_avg
+  - sensor_6_avg
+  - sensor_7_avg
+  - sensor_8_avg
+  - sensor_9_avg
+  - sensor_10_avg
+  - sensor_11_avg
+  - sensor_12_avg
+  - sensor_13_avg
+  - sensor_14_avg
+  - sensor_15_avg
+  - sensor_16_avg
+  - sensor_17_avg
+  - sensor_18_avg
+  - sensor_19_avg
+  - sensor_20_avg
+  - sensor_21_avg
+  - sensor_22_avg
+  - sensor_23_avg
+  - sensor_24_avg
+  - sensor_25_avg
+  - reactive_power_27_avg
+  - reactive_power_28_avg
+  - power_29_avg
+  - power_30_avg
+  - sensor_31_avg
+  - sensor_32_avg
+  - sensor_33_avg
+  - sensor_34_avg
+  - sensor_35_avg
+  - sensor_36_avg
+  - sensor_37_avg
+  - sensor_38_avg
+  - sensor_39_avg
+  - sensor_40_avg
+  - sensor_41_avg
+  - sensor_43_avg
+  - sensor_44
+  - sensor_45
+  - sensor_47
+  - sensor_48
+  - sensor_50
+  - sensor_51
+  - sensor_52_avg
+  - sensor_53_avg
+  - sensor_1_avg_sin
+  - sensor_1_avg_cos
+  - sensor_2_avg_sin
+  - sensor_2_avg_cos
+  - sensor_5_avg_sin
+  - sensor_5_avg_cos
+  - sensor_42_avg_sin
+  - sensor_42_avg_cos
+inference:
+  supported_input_formats:
+    - .csv
+    - .npy
+  normalization: checkpoint_minmax_scaler
+  score_name: rmse_reconstruction_error
+  risk_thresholds:
+    warning_min_ratio: 0.05
+    critical_min_ratio: 0.20

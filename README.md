@@ -1,6 +1,8 @@
 # 风电智能诊断平台
 
-这是一个面向风电场景的智能诊断项目，围绕本地小模型库构建，提供模型浏览、诊断任务执行、案例查看、报告生成与知识问答等能力。
+这是一个面向风电场景的智能诊断项目，围绕小模型库构建，提供模型浏览、诊断任务执行、案例查看、报告生成与知识问答等能力。
+
+当前仓库已经包含完整的 `littlemodel/` 模型库，拉取仓库后可以直接配合前后端运行。
 
 ## 项目定位
 
@@ -25,6 +27,7 @@ windpower_agent3/
 ├─ backend/          后端服务与接口
 ├─ frontend/         前端单页应用
 ├─ knowledge_base/   风电领域知识与模型说明
+├─ littlemodel/      本地模型库与模型权重
 ├─ RUN_GUIDE.md      本地运行说明
 └─ docker-compose.qdrant.yml
 ```
@@ -33,7 +36,8 @@ windpower_agent3/
 
 - Python 3.10+
 - Node.js 18+
-- 本地模型库：`C:\Users\luzian\Desktop\littlemodel`
+- 仓库内已自带 `littlemodel/`
+- 如需改用外部模型库，也可以通过 `WINDPOWER_LITTLEMODEL_ROOT` 指向其他路径
 
 ## 快速启动
 

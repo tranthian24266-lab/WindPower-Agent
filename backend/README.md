@@ -14,7 +14,8 @@ Set or make available a `littlemodel` workspace. Resolution order is:
 
 1. `WINDPOWER_LITTLEMODEL_ROOT`
 2. legacy `LITTLEMODEL_ROOT`
-3. auto-discovery of the sibling folder `../littlemodel`
+3. bundled folder `./littlemodel` inside this repository
+4. auto-discovery of the sibling folder `../littlemodel`
 
 If none of these resolve, backend startup fails fast by design.
 

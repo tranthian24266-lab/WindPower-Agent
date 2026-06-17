@@ -1,0 +1,26 @@
+{
+  "version": "1.0.0",
+  "models": [
+    {
+      "model_id": "nrel_binary_mscnn_bilstm_sensor1",
+      "task_type": "fault_diagnosis",
+      "model_dir": "fault_diagnosis",
+      "entrypoint": "inference.py:predict",
+      "status": "active"
+    },
+    {
+      "model_id": "hssb_svr_multifeature_60_40",
+      "task_type": "rul_prediction",
+      "model_dir": "rul_prediction",
+      "entrypoint": "inference.py:predict",
+      "status": "active"
+    },
+    {
+      "model_id": "scada_ae_decoder_transfer_13_to_10",
+      "task_type": "anomaly_detection",
+      "model_dir": "anomaly_detection",
+      "entrypoint": "inference.py:predict",
+      "status": "active"
+    }
+  ]
+}

@@ -224,9 +224,13 @@ class Settings(BaseSettings):
         if self.littlemodel_root is not None:
             candidates.append(self.littlemodel_root)
 
-        auto_discovered = self.project_root.parent / "littlemodel"
-        if all(candidate != auto_discovered for candidate in candidates):
-            candidates.append(auto_discovered)
+        bundled = self.project_root / "littlemodel"
+        if all(candidate != bundled for candidate in candidates):
+            candidates.append(bundled)
+
+        sibling = self.project_root.parent / "littlemodel"
+        if all(candidate != sibling for candidate in candidates):
+            candidates.append(sibling)
 
         for candidate in candidates:
             resolved = candidate.resolve(strict=False)

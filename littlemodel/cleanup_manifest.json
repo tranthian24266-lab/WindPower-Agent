@@ -1,0 +1,131 @@
+[
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\fault_diagnosis",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\fault_diagnosis",
+    "kept": false,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "fault_diagnosis",
+    "action": "backed_up_before_restructure",
+    "backup_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\_backup_before_cleanup\\fault_diagnosis"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\RUL",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\rul_prediction",
+    "kept": false,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "rul_prediction",
+    "action": "backed_up_before_restructure",
+    "backup_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\_backup_before_cleanup\\RUL"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\AD",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\anomaly_detection",
+    "kept": false,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "anomaly_detection",
+    "action": "backed_up_before_restructure",
+    "backup_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\_backup_before_cleanup\\AD"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\fault_diagnosis\\weights\\sensor1_mscnn_bilstm_binary_best.pth",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\fault_diagnosis\\weights\\sensor1_mscnn_bilstm_binary_best.pth",
+    "kept": true,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "fault_diagnosis",
+    "action": "kept_as_default_weight"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\fault_diagnosis\\optional_models\\sensor2_mscnn_bilstm_binary_best.pth",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\fault_diagnosis\\optional_models\\sensor2_mscnn_bilstm_binary_best.pth",
+    "kept": true,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "fault_diagnosis",
+    "action": "kept_as_optional_nondefault"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\fault_diagnosis\\optional_models\\vote_weights.json",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\fault_diagnosis\\optional_models\\vote_weights.json",
+    "kept": true,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "fault_diagnosis",
+    "action": "kept_as_optional_nondefault"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\rul_prediction\\weights\\svr_demo_multifeature_60_40.joblib",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\rul_prediction\\weights\\svr_demo_multifeature_60_40.joblib",
+    "kept": true,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "rul_prediction",
+    "action": "kept_as_default_weight"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\rul_prediction\\optional_models",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\rul_prediction\\optional_models",
+    "kept": true,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "rul_prediction",
+    "action": "kept_as_optional_nondefault_directory"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\anomaly_detection\\weights\\best_anomaly_model.pt",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\anomaly_detection\\weights\\best_anomaly_model.pt",
+    "kept": true,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "anomaly_detection",
+    "action": "kept_as_default_weight"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\README.md",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\README.md",
+    "kept": true,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "library_root",
+    "action": "generated"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\model_registry.json",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\model_registry.json",
+    "kept": true,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "library_root",
+    "action": "generated"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\validate_model_library.py",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\validate_model_library.py",
+    "kept": true,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "library_root",
+    "action": "generated"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\run_all_examples.py",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\run_all_examples.py",
+    "kept": true,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "library_root",
+    "action": "generated"
+  },
+  {
+    "original_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\SUMMARY_CLEANUP.md",
+    "new_path": "C:\\Users\\luzian\\Desktop\\littlemodel\\SUMMARY_CLEANUP.md",
+    "kept": true,
+    "deleted": false,
+    "deletion_reason": "",
+    "model_category": "library_root",
+    "action": "generated"
+  }
+]

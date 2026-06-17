@@ -1,0 +1,159 @@
+{
+  "dataset_name": "NREL binary healthy_vs_damaged multisensor supplement",
+  "note": "Built from archived raw data after the Table 6 proxy main reproduction cleanup.",
+  "window_size": 4096,
+  "train_stride": 4096,
+  "test_stride": 4096,
+  "sensor_channels": {
+    "sensor1": {
+      "train_channel": "AN8",
+      "test_channel": "AN9"
+    },
+    "sensor2": {
+      "train_channel": "AN5",
+      "test_channel": "AN6"
+    }
+  },
+  "class_rules": [
+    {
+      "class_id": 0,
+      "class_name": "healthy",
+      "source_files": [
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H1.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H10.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H2.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H3.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H4.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H5.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H6.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H7.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H8.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H9.mat"
+      ],
+      "available_paired_train_val_windows": 5850,
+      "available_paired_test_windows": 5850,
+      "train_count": 200,
+      "val_count": 50,
+      "test_count": 200,
+      "train_examples": [
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H1.mat",
+          "start": 1130496
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H7.mat",
+          "start": 733184
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H6.mat",
+          "start": 2166784
+        }
+      ],
+      "val_examples": [
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H5.mat",
+          "start": 323584
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H8.mat",
+          "start": 1585152
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H9.mat",
+          "start": 2101248
+        }
+      ],
+      "test_examples": [
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H9.mat",
+          "start": 1036288
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H6.mat",
+          "start": 634880
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Healthy\\Healthy\\H7.mat",
+          "start": 122880
+        }
+      ]
+    },
+    {
+      "class_id": 1,
+      "class_name": "damaged",
+      "source_files": [
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D1.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D10.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D2.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D3.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D4.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D5.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D6.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D7.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D8.mat",
+        "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D9.mat"
+      ],
+      "available_paired_train_val_windows": 5850,
+      "available_paired_test_windows": 5850,
+      "train_count": 200,
+      "val_count": 50,
+      "test_count": 200,
+      "train_examples": [
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D8.mat",
+          "start": 1290240
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D4.mat",
+          "start": 831488
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D4.mat",
+          "start": 499712
+        }
+      ],
+      "val_examples": [
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D1.mat",
+          "start": 1937408
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D3.mat",
+          "start": 958464
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D3.mat",
+          "start": 1351680
+        }
+      ],
+      "test_examples": [
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D5.mat",
+          "start": 77824
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D8.mat",
+          "start": 1028096
+        },
+        {
+          "file": "C:\\Users\\luzian\\Desktop\\windpower_dataset\\fault_dianosis\\archive_to_delete\\raw\\nrel\\extracted\\Damaged\\Damaged\\D6.mat",
+          "start": 913408
+        }
+      ]
+    }
+  ],
+  "class_distribution": {
+    "train": {
+      "0": 200,
+      "1": 200
+    },
+    "val": {
+      "0": 50,
+      "1": 50
+    },
+    "test": {
+      "0": 200,
+      "1": 200
+    }
+  }
+}

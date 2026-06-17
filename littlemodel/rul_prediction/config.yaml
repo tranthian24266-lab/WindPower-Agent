@@ -1,0 +1,38 @@
+model:
+  id: hssb_svr_multifeature_60_40
+  name: HSSB SVR Multi-feature RUL Prediction Model
+  version: 1.0.0
+  default_weight_file: svr_demo_multifeature_60_40.joblib
+feature_extraction:
+  sampling_rate_hz: 97656
+  stft_nperseg: 128
+  stft_noverlap: 64
+  all_feature_names:
+    - mean
+    - std
+    - skewness
+    - kurtosis
+    - peak_to_peak
+    - rms
+    - sk_mean
+    - sk_std
+    - sk_skewness
+    - sk_kurtosis
+    - sk_peak_to_peak
+    - sk_area
+    - sk_area_positive
+    - sk_max
+  selected_feature_names:
+    - sk_area_positive
+    - kurtosis
+    - std
+    - peak_to_peak
+inference:
+  supported_input_formats:
+    - .mat
+  mat_signal_key: vibration
+  rul_unit: measurement_index
+  clipped_range: [0, 49]
+  risk_thresholds:
+    critical_max: 5
+    warning_max: 15
