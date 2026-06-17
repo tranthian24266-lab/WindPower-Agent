@@ -1,38 +1,60 @@
-# Windpower Small Model Diagnostic Platform
+# 风电智能诊断平台
 
-This repository packages a windpower diagnostic platform around the verified local model library at `C:\Users\luzian\Desktop\littlemodel`.
+这是一个面向风电场景的智能诊断项目，围绕本地小模型库构建，提供模型浏览、诊断任务执行、案例查看、报告生成与知识问答等能力。
 
-## Current Platform Scope
+## 项目定位
 
-- FastAPI backend for upload, diagnosis, cases, reports, chat, model catalog, and knowledge-base operations
-- React + Vite frontend for model browsing, diagnosis execution, case review, reports, and chat
-- Base report and enhanced report chains with explicit export status
-- Optional RAG/Qdrant integration and optional write-auth via `X-API-Key`
-- Automated backend tests plus three Playwright end-to-end diagnosis/report flows
+- 后端：`FastAPI`
+- 前端：`React 18` + `TypeScript` + `Vite`
+- 路由：`React Router`
+- 样式：`Tailwind CSS`
+- 测试：`pytest` + `Playwright`
 
-## Hard Constraints
+## 核心能力
 
-- Do not modify model code, weights, or test data inside `C:\Users\luzian\Desktop\littlemodel`
-- Use the unified `model_registry.json` + `inference.py:predict` entrypoints only
-- Treat `littlemodel` as an external dependency that must stay intact
+- 模型库展示与模型信息查看
+- 风电数据上传与诊断任务执行
+- 诊断结果、案例与报告管理
+- 知识库检索与问答增强
+- 可扩展的多智能体诊断流程
 
-## Quick Start
+## 项目结构
 
-- Backend guide: [backend/README.md](/C:/Users/luzian/Desktop/windpower_agent3/backend/README.md)
-- Frontend guide: [frontend/README.md](/C:/Users/luzian/Desktop/windpower_agent3/frontend/README.md)
-- End-to-end run guide: [RUN_GUIDE.md](/C:/Users/luzian/Desktop/windpower_agent3/RUN_GUIDE.md)
-- Deployment notes: [docs/deployment-notes.md](/C:/Users/luzian/Desktop/windpower_agent3/docs/deployment-notes.md)
-- Security mode notes: [docs/security-mode.md](/C:/Users/luzian/Desktop/windpower_agent3/docs/security-mode.md)
-- Testing playbook: [docs/testing-playbook.md](/C:/Users/luzian/Desktop/windpower_agent3/docs/testing-playbook.md)
-- Project slimming note: [docs/project-slimming-2026-06-07.md](/C:/Users/luzian/Desktop/windpower_agent3/docs/project-slimming-2026-06-07.md)
+```text
+windpower_agent3/
+├─ backend/          后端服务与接口
+├─ frontend/         前端单页应用
+├─ knowledge_base/   风电领域知识与模型说明
+├─ RUN_GUIDE.md      本地运行说明
+└─ docker-compose.qdrant.yml
+```
 
-## Current Validation Entry Points
+## 运行要求
+
+- Python 3.10+
+- Node.js 18+
+- 本地模型库：`C:\Users\luzian\Desktop\littlemodel`
+
+## 快速启动
+
+后端依赖安装与启动：
 
 ```powershell
-cd C:\Users\luzian\Desktop\windpower_agent3\backend
-pytest -q
-
-cd C:\Users\luzian\Desktop\windpower_agent3\frontend
-npm run build
-npx playwright test
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload
 ```
+
+前端依赖安装与启动：
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+## 说明
+
+- 本项目默认复用 `littlemodel` 中已经整理好的模型能力，不直接改动模型源码和权重。
+- `knowledge_base/raw/`、`knowledge_base/models/`、`knowledge_base/domain_knowledge/` 属于应保留的源知识内容。
+- 运行生成的缓存、日志、报告、中间文件不建议上传到 GitHub。
