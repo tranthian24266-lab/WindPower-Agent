@@ -1,0 +1,21 @@
+{% extends "enhanced_report_base.html" %}
+
+{% block task_overview %}
+<section class="panel">
+  <h2>异常监测概览</h2>
+  <div class="grid">
+    <div class="card">
+      <strong>异常比例</strong>
+      <p>{{ case_context.result.anomaly_ratio or "unknown" }}</p>
+    </div>
+    <div class="card">
+      <strong>异常样本数</strong>
+      <p>{{ case_context.result.num_anomalies or "unknown" }}</p>
+    </div>
+    <div class="card">
+      <strong>迁移关注点</strong>
+      <p>{{ case_context.recommendation or "建议核对目标机组工况与迁移适用边界。" }}</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

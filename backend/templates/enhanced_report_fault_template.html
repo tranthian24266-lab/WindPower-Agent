@@ -1,0 +1,21 @@
+{% extends "enhanced_report_base.html" %}
+
+{% block task_overview %}
+<section class="panel">
+  <h2>故障诊断概览</h2>
+  <div class="grid">
+    <div class="card">
+      <strong>诊断标签</strong>
+      <p>{{ case_context.result.prediction or "unknown" }}</p>
+    </div>
+    <div class="card">
+      <strong>模型置信度</strong>
+      <p>{{ case_context.result.confidence or "unknown" }}</p>
+    </div>
+    <div class="card">
+      <strong>现场建议</strong>
+      <p>{{ case_context.recommendation or "建议结合巡检与复测进一步确认。" }}</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

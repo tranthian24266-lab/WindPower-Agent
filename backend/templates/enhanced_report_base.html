@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>{{ task_profile.headline }} - {{ case_id }}</title>
+  <style>
+    :root {
+      --bg: #edf2ee;
+      --panel: #ffffff;
+      --line: #d7e1d8;
+      --ink: #13281b;
+      --muted: #5f7065;
+      --accent: #2f8b58;
+      --soft: #edf6ef;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 30px;
+      background: linear-gradient(180deg, #f5f7f3 0%, var(--bg) 100%);
+      color: var(--ink);
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+    }
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+    .hero,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: 0 14px 34px rgba(19, 46, 32, 0.07);
+    }
+    .hero {
+      padding: 24px 28px;
+      background:
+        radial-gradient(circle at top right, rgba(47, 139, 88, 0.18), transparent 28%),
+        linear-gradient(135deg, #ffffff 0%, #f8fbf7 100%);
+    }
+    .panel { padding: 22px 24px; }
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    h1, h2, h3 { margin: 0 0 12px; }
+    p, li { margin: 0; line-height: 1.72; color: var(--muted); }
+    ul { margin: 0; padding-left: 20px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .stat, .card, .cite {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #f9fcf8;
+    }
+    .section-block {
+      display: grid;
+      gap: 10px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .section-block:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+    .meta { color: var(--muted); font-size: 13px; }
+    .stack { display: grid; gap: 12px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      font-size: 12px;
+      color: var(--ink);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .cite-list { display: grid; gap: 12px; }
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+    }
+    @media (max-width: 860px) {
+      .section-grid { grid-template-columns: 1fr; }
+      body { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <span class="badge">{{ task_profile.hero_tag }}</span>
+      <h1>{{ case_id }} {{ task_profile.headline }}</h1>
+      <p>{{ task_profile.hero_summary }}</p>
+      <div class="grid">
+        <div class="stat"><strong>任务类型</strong><p>{{ case_context.task_type }}</p></div>
+        <div class="stat"><strong>模型</strong><p>{{ model_context.model_name }}</p></div>
+        <div class="stat"><strong>风险等级</strong><p>{{ case_context.risk_level }}</p></div>
+        <div class="stat"><strong>{{ task_profile.primary_metric.label }}</strong><p>{{ task_profile.primary_metric.value }}</p></div>
+      </div>
+    </section>
+
+    {% block task_overview %}{% endblock %}
+
+    <section class="panel section-grid">
+      <div>
+        <h2>核心章节</h2>
+        {% for section in task_profile.sections %}
+        <div class="section-block">
+          <h3>{{ section.title }}</h3>
+          <p>{{ section.content }}</p>
+          <div class="meta">Confidence: {{ section.confidence }} | Evidence refs: {{ section.evidence_refs | join(", ") }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h3>{{ task_profile.focus_title }}</h3>
+          <ul>
+            {% for item in task_profile.focus_points %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="card">
+          <h3>{{ task_profile.deep_dive_title }}</h3>
+          {% for item in task_profile.deep_dive_items %}
+          <p><strong>{{ item.label }}</strong> {{ item.value }}</p>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>附录指标</h2>
+      <table>
+        <thead>
+          <tr><th>指标</th><th>值</th></tr>
+        </thead>
+        <tbody>
+          {% for item in report.appendix_metrics %}
+          <tr><td>{{ item.label }}</td><td>{{ item.value }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>相似案例</h2>
+      {% if report.similar_cases %}
+      <ul>
+        {% for item in report.similar_cases %}
+        <li>{{ item.case_id }} - {{ item.summary }}{% if item.score is not none %} (score={{ item.score }}){% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>当前没有可展示的相似案例。</p>
+      {% endif %}
+    </section>
+
+    <section class="panel">
+      <h2>引用证据</h2>
+      <div class="cite-list">
+        {% for item in report.citations %}
+        <div class="cite">
+          <strong>{{ item.title }}</strong>
+          <p>{{ item.excerpt }}</p>
+          <div class="meta">{{ item.evidence_type }} | {{ item.evidence_ref }}{% if item.score is not none %} | score={{ item.score }}{% endif %}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</body>
+</html>

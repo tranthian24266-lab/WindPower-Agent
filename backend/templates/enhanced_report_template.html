@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>增强报告 - {{ case_id }}</title>
+  <style>
+    :root {
+      --bg: #eef3ec;
+      --panel: #ffffff;
+      --line: #d8e1d6;
+      --ink: #173020;
+      --muted: #5f7065;
+      --accent: #2c8f5b;
+      --soft: #edf6ef;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 30px;
+      background: linear-gradient(180deg, #f4f7f2 0%, var(--bg) 100%);
+      color: var(--ink);
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+    }
+    .shell {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+    .hero,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: 0 14px 34px rgba(19, 46, 32, 0.07);
+    }
+    .hero {
+      padding: 24px 28px;
+      background:
+        radial-gradient(circle at top right, rgba(44, 143, 91, 0.18), transparent 26%),
+        linear-gradient(135deg, #ffffff 0%, #f8fbf7 100%);
+    }
+    .panel { padding: 22px 24px; }
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    h1, h2, h3 { margin: 0 0 12px; }
+    p, li {
+      margin: 0;
+      line-height: 1.72;
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .stat,
+    .cite {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #f9fcf8;
+    }
+    .section-block {
+      display: grid;
+      gap: 10px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .section-block:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      font-size: 12px;
+      color: var(--ink);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .cite-list {
+      display: grid;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <span class="badge">增强报告</span>
+      <h1>{{ case_id }} 增强报告</h1>
+      <p>{{ report.case_summary.content }}</p>
+      <div class="grid">
+        <div class="stat"><strong>任务类型</strong><p>{{ case_context.task_type }}</p></div>
+        <div class="stat"><strong>模型</strong><p>{{ model_context.model_name }}</p></div>
+        <div class="stat"><strong>风险等级</strong><p>{{ case_context.risk_level }}</p></div>
+        <div class="stat"><strong>知识模式</strong><p>{{ retrieved_knowledge.mode }}</p></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>核心章节</h2>
+      {% for section_key in ["case_summary", "diagnosis_conclusion", "risk_assessment", "evidence_summary", "maintenance_actions", "applicability_and_limits"] %}
+      <div class="section-block">
+        <h3>{{ report[section_key].title }}</h3>
+        <p>{{ report[section_key].content }}</p>
+        <div class="meta">Confidence: {{ report[section_key].confidence }} | Evidence refs: {{ report[section_key].evidence_refs | join(", ") }}</div>
+      </div>
+      {% endfor %}
+    </section>
+
+    <section class="panel">
+      <h2>附录指标</h2>
+      <table>
+        <thead>
+          <tr><th>指标</th><th>值</th></tr>
+        </thead>
+        <tbody>
+          {% for item in report.appendix_metrics %}
+          <tr><td>{{ item.label }}</td><td>{{ item.value }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>相似案例</h2>
+      {% if report.similar_cases %}
+      <ul>
+        {% for item in report.similar_cases %}
+        <li>{{ item.case_id }} - {{ item.summary }}{% if item.score is not none %} (score={{ item.score }}){% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>当前没有可展示的相似案例。</p>
+      {% endif %}
+    </section>
+
+    <section class="panel">
+      <h2>引用证据</h2>
+      <div class="cite-list">
+        {% for item in report.citations %}
+        <div class="cite">
+          <strong>{{ item.title }}</strong>
+          <p>{{ item.excerpt }}</p>
+          <div class="meta">{{ item.evidence_type }} | {{ item.evidence_ref }}{% if item.score is not none %} | score={{ item.score }}{% endif %}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</body>
+</html>

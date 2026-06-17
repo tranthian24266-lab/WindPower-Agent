@@ -1,0 +1,40 @@
+你现在接手仓库 `C:\Users\luzian\Desktop\windpower_agent3` 的前端视觉改造工作。
+
+先完整阅读：
+
+- `C:\Users\luzian\Desktop\windpower_agent3\docs\frontend-visual-redesign-plan-2026-06-12.md`
+
+执行要求：
+
+1. 严格按文档里的改造顺序推进，优先做全局设计 token、布局壳层、通用组件，再做页面。
+2. 本次目标不是只换颜色，而是把当前前端从“整洁可用的后台”升级为“风电智能体控制中枢”风格。
+3. 必须优先修改这些文件：
+   - `frontend/src/styles.css`
+   - `frontend/src/components/Layout.tsx`
+   - `frontend/src/components/PageHeader.tsx`
+   - `frontend/src/components/MetricGrid.tsx`
+4. 第一批重点页面是：
+   - `frontend/src/pages/DashboardPage.tsx`
+   - `frontend/src/pages/DiagnosisPage.tsx`
+   - `frontend/src/pages/ModelLibraryPage.tsx`
+   - `frontend/src/pages/KnowledgePage.tsx`
+   - `frontend/src/pages/ChatPage.tsx`
+5. 不要破坏现有业务接口、路由和页面职责。
+6. 不要引入紫色科技风，不要做成纯黑运维台，不要只堆通用卡片。
+7. 要强化品牌感、首页主视觉、信息层级、状态表达、空状态和关键交互。
+8. 如果需要新增通用组件，优先抽象为可复用组件，不要在页面里重复堆样式。
+9. 每次开始修改前，先说明当前要改哪个阶段、会动哪些文件、目标效果是什么。
+10. 修改完成后至少执行：
+
+```powershell
+cd C:\Users\luzian\Desktop\windpower_agent3\frontend
+npm run build
+```
+
+11. 如果本地开发服务可用，再用浏览器实际检查首页、诊断页、模型库、知识库、问答页的最终效果。
+
+当前请从：
+
+- 第一阶段：全局骨架与设计 token
+
+开始执行。

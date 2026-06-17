@@ -1,0 +1,14 @@
+{
+  "suite_id": "anomaly_report_smoke",
+  "title": "Anomaly Report Smoke",
+  "version": "2026-06-11",
+  "description": "Run one anomaly sample and verify enhanced report generation stays publishable or reviewable.",
+  "items": [
+    {
+      "item_key": "anomaly_case_report",
+      "task_type": "anomaly_detection",
+      "sample_path": "anomaly_detection/test_data/test_data_sample.csv",
+      "generate_enhanced_report": true
+    }
+  ]
+}

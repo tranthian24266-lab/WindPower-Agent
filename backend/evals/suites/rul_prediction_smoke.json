@@ -1,0 +1,13 @@
+{
+  "suite_id": "rul_prediction_smoke",
+  "title": "RUL Prediction Smoke",
+  "version": "2026-06-11",
+  "description": "Run one RUL sample and verify raw and clipped outputs are present.",
+  "items": [
+    {
+      "item_key": "rul_case_basic",
+      "task_type": "rul_prediction",
+      "sample_path": "rul_prediction/test_data/split_60_40/data-20130406T221209Z.mat"
+    }
+  ]
+}

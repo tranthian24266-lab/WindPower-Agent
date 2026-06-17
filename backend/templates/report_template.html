@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>诊断报告 - {{ case_id }}</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7f2;
+      --panel: #ffffff;
+      --line: #d7dfd1;
+      --ink: #193321;
+      --muted: #5a6c60;
+      --accent: #2c8f5b;
+      --accent-soft: #e6f3eb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px;
+      background: linear-gradient(180deg, #edf4eb 0%, var(--bg) 100%);
+      color: var(--ink);
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+    }
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+    .hero, .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 16px 36px rgba(22, 40, 28, 0.08);
+    }
+    .hero {
+      background:
+        radial-gradient(circle at top right, rgba(44, 143, 91, 0.16), transparent 28%),
+        linear-gradient(135deg, #ffffff 0%, #f7fbf8 100%);
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    h1, h2 {
+      margin: 0 0 12px;
+    }
+    p {
+      margin: 0;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .stat {
+      padding: 14px;
+      border-radius: 16px;
+      background: #f8faf7;
+      border: 1px solid var(--line);
+    }
+    .stat strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      color: var(--ink);
+      font-size: 13px;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #13211a;
+      color: #eff7ef;
+      border-radius: 16px;
+      padding: 18px;
+      overflow: auto;
+    }
+    ul {
+      margin: 14px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <span class="badge">{{ task_type }}</span>
+      <h1>风电诊断报告</h1>
+      <p>{{ summary }}</p>
+      <div class="grid">
+        <div class="stat"><strong>Case ID</strong>{{ case_id }}</div>
+        <div class="stat"><strong>模型</strong>{{ model_name }}</div>
+        <div class="stat"><strong>风险等级</strong>{{ risk_level }}</div>
+        <div class="stat"><strong>上传文件</strong>{{ original_filename }}</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>基本信息</h2>
+      <table>
+        <tr><th>任务类型</th><td>{{ task_type }}</td></tr>
+        <tr><th>模型 ID</th><td>{{ model_id }}</td></tr>
+        <tr><th>生成时间</th><td>{{ created_at }}</td></tr>
+        <tr><th>文件路径</th><td>{{ stored_path }}</td></tr>
+        <tr><th>论文</th><td>{{ paper_title }}</td></tr>
+        <tr><th>数据集</th><td>{{ dataset }}</td></tr>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>诊断结果</h2>
+      <table>
+        <thead>
+          <tr><th>指标</th><th>值</th></tr>
+        </thead>
+        <tbody>
+          {% for item in metrics %}
+          <tr><td>{{ item.label }}</td><td>{{ item.value }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>模型摘要</h2>
+      <p>{{ readme_summary }}</p>
+    </section>
+
+    <section class="panel">
+      <h2>维护建议</h2>
+      <p>{{ recommendation }}</p>
+    </section>
+
+    <section class="panel">
+      <h2>注意事项</h2>
+      <ul>
+        {% for limitation in limitations %}
+        <li>{{ limitation }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2>完整结果 JSON</h2>
+      <pre>{{ result_json }}</pre>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% extends "enhanced_report_base.html" %}
+
+{% block task_overview %}
+<section class="panel">
+  <h2>寿命评估概览</h2>
+  <div class="grid">
+    <div class="card">
+      <strong>保护后 RUL</strong>
+      <p>{{ case_context.result.rul_clipped or "unknown" }}</p>
+    </div>
+    <div class="card">
+      <strong>原始 RUL</strong>
+      <p>{{ case_context.result.rul_raw or "unknown" }}</p>
+    </div>
+    <div class="card">
+      <strong>维修窗口建议</strong>
+      <p>{{ case_context.recommendation or "建议结合趋势和检修窗口综合评估。" }}</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

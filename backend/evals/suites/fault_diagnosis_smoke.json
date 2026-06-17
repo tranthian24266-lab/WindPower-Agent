@@ -1,0 +1,14 @@
+{
+  "suite_id": "fault_diagnosis_smoke",
+  "title": "Fault Diagnosis Smoke",
+  "version": "2026-06-11",
+  "description": "Upload a known fault diagnosis sample, run diagnosis, then ask one grounded chat question.",
+  "items": [
+    {
+      "item_key": "fault_case_chat",
+      "task_type": "fault_diagnosis",
+      "sample_path": "fault_diagnosis/test_data/test_sensor1_x.npy",
+      "chat_question": "请用一句话总结当前案例。"
+    }
+  ]
+}
