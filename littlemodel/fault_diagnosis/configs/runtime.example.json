@@ -1,0 +1,10 @@
+{
+  "default_input": "test_data/test_sensor1_x.npy",
+  "hf_dataset_id": "alidi/wind-turbine-5mw-bearing-dataset",
+  "zenodo_fallback": "https://doi.org/10.5281/zenodo.7674842",
+  "external_data_env": "FAULT_DIAGNOSIS_DATA_DIR",
+  "notes": [
+    "data_check.py verifies HuggingFace accessibility before external training attempts.",
+    "Current packaged demo evaluates the existing MSCNN-BiLSTM checkpoint because the upstream PCA-CNN training repo is not vendored here."
+  ]
+}

@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     model_catalog_page_size_default: int = 20
     model_catalog_page_size_max: int = 100
     model_validation_timeout_seconds: float = 120.0
+    model_package_max_upload_bytes: int = 1024 * 1024 * 1024
+    model_package_max_uncompressed_bytes: int = 2 * 1024 * 1024 * 1024
+    model_package_max_files: int = 2000
     auth_enabled: bool = False
     api_key: Optional[str] = Field(
         default=None,
@@ -160,6 +163,14 @@ class Settings(BaseSettings):
     @property
     def uploads_path(self) -> Path:
         return self.backend_root / "uploads"
+
+    @property
+    def model_package_staging_path(self) -> Path:
+        return self.uploads_path / "model_packages" / "staging"
+
+    @property
+    def model_package_trash_path(self) -> Path:
+        return self.uploads_path / "model_packages" / "trash"
 
     @property
     def outputs_path(self) -> Path:

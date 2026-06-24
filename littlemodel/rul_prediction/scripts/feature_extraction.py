@@ -117,8 +117,8 @@ def compute_sk_features(
             ("sk_skewness", _safe_skew(sk_curve)),
             ("sk_kurtosis", _safe_kurtosis(sk_curve)),
             ("sk_peak_to_peak", float(np.ptp(sk_curve))),
-            ("sk_area", float(np.trapz(sk_curve, freqs))),
-            ("sk_area_positive", float(np.trapz(np.maximum(sk_curve, 0.0), freqs))),
+            ("sk_area", float(np.trapezoid(sk_curve, freqs))),
+            ("sk_area_positive", float(np.trapezoid(np.maximum(sk_curve, 0.0), freqs))),
             ("sk_max", float(np.max(sk_curve))),
         ]
     )

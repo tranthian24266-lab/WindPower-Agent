@@ -4,7 +4,7 @@
   "model_name": "HSSB SVR Multi-feature RUL Prediction Model",
   "model_version": "1.0.0",
   "status": "success",
-  "input_file": "C:\\Users\\luzian\\Desktop\\littlemodel\\rul_prediction\\test_data\\split_60_40\\data-20130406T221209Z.mat",
+  "input_file": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\test_data\\split_60_40\\data-20130406T221209Z.mat",
   "rul_raw": 27.89846496941857,
   "rul_clipped": 27.89846496941857,
   "rul_unit": "measurement_index",
@@ -38,7 +38,7 @@
     ]
   },
   "artifacts": {
-    "result_json": "C:\\Users\\luzian\\Desktop\\littlemodel\\rul_prediction\\examples\\outputs\\result.json",
-    "feature_csv": "C:\\Users\\luzian\\Desktop\\littlemodel\\rul_prediction\\examples\\outputs\\feature.csv"
+    "result_json": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\examples\\outputs\\result.json",
+    "feature_csv": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\examples\\outputs\\feature.csv"
   }
 }

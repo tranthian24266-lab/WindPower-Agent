@@ -1,81 +1,100 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Activity, UploadCloud, Settings2, Play, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Activity,
+  Bot,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  Play,
+  Settings2,
+  UploadCloud,
+} from "lucide-react";
 
 import { PageHeader } from "../components/PageHeader";
+import { BatchDiagnosisPanel } from "../components/BatchDiagnosisPanel";
 import { StatusBanner } from "../components/StatusBanner";
-import { diagnose, getApiErrorMessage, uploadFile } from "../lib/api";
-import type { TaskType } from "../types";
+import { autoDiagnose, diagnose, getApiErrorMessage, uploadFile } from "../lib/api";
+import { taskTypeLabel } from "../lib/format";
+import type { AutoDiagnoseResponse, AutoDiagnosisRouting, TaskType } from "../types";
 
-const taskOptions: Array<{
-  value: TaskType;
-  label: string;
-  desc: string;
-  icon: React.ReactNode;
-  format: string;
-  output: string;
-}> = [
-  {
-    value: "fault_diagnosis",
-    label: "故障诊断",
-    desc: "判断齿轮箱当前更接近健康还是受损状态。",
-    icon: <Activity size={24} />,
-    format: ".csv 振动数据",
-    output: "健康/故障概率与受损定位",
-  },
-  {
-    value: "rul_prediction",
-    label: "RUL 预测",
-    desc: "估计剩余可用寿命，辅助维护决策。",
-    icon: <Activity size={24} />,
-    format: ".mat 振动/运行数据",
-    output: "预测寿命天数与置信区间",
-  },
-  {
-    value: "anomaly_detection",
-    label: "异常检测",
-    desc: "评估设备整体异常比例和运行风险。",
-    icon: <Activity size={24} />,
-    format: ".npy/.npz SCADA 数据",
-    output: "异常得分与越限点分布",
-  },
+const taskOptions: Array<{ value: TaskType; label: string; desc: string; format: string }> = [
+  { value: "fault_diagnosis", label: "故障诊断", desc: "判断齿轮箱当前更接近健康还是受损状态。", format: ".npy/.npz/.mat/.csv" },
+  { value: "rul_prediction", label: "故障预测", desc: "估计剩余可用寿命与退化趋势。", format: ".mat" },
+  { value: "anomaly_detection", label: "健康状态检测", desc: "评估设备整体健康状态和运行风险。", format: ".csv" },
 ];
 
 export function DiagnosisPage() {
   const navigate = useNavigate();
+  const [manualMode, setManualMode] = useState(false);
   const [taskType, setTaskType] = useState<TaskType>("fault_diagnosis");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [status, setStatus] = useState<string>("");
+  const [uploadedFileId, setUploadedFileId] = useState("");
+  const [routing, setRouting] = useState<AutoDiagnosisRouting | null>(null);
+  const [status, setStatus] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [preferredAlias, setPreferredAlias] = useState("");
   const [preferredModelId, setPreferredModelId] = useState("");
 
-  const selectedOption = useMemo(() => taskOptions.find((item) => item.value === taskType), [taskType]);
+  const routeOptions = {
+    preferredAlias: preferredAlias.trim() || undefined,
+    preferredModelId: preferredModelId.trim() || undefined,
+  };
+
+  function openCompletedDiagnosis(response: AutoDiagnoseResponse) {
+    if (!("case_id" in response)) {
+      setRouting(response.routing);
+      setStatus(
+        response.status === "needs_confirmation"
+          ? "智能体发现多个可能的任务，请确认后继续。"
+          : "当前数据与已有模型输入契约不匹配。",
+      );
+      return;
+    }
+    setRouting(response.routing);
+    setStatus("智能体已完成模型选择和诊断，正在打开结果工作台...");
+    setTimeout(() => navigate(`/cases/${response.case_id}`), 400);
+  }
 
   async function handleRun() {
     if (!selectedFile) {
       setError("请先选择一个样本文件。");
       return;
     }
-
     setRunning(true);
     setError(null);
-    setStatus("正在上传样本文件...");
+    setRouting(null);
+    setStatus("正在上传并分析样本文件...");
     try {
       const fileInfo = await uploadFile(selectedFile);
-      setStatus("文件上传成功，正在调度智能体进行诊断...");
-      const diagnosis = await diagnose(fileInfo.file_id, taskType, {
-        preferredAlias: preferredAlias.trim() || undefined,
-        preferredModelId: preferredModelId.trim() || undefined,
-      });
-      setStatus("诊断已完成，正在打开结果工作台...");
-      setTimeout(() => {
-        navigate(`/cases/${diagnosis.case_id}`);
-      }, 500);
+      setUploadedFileId(fileInfo.file_id);
+      if (manualMode) {
+        setStatus(`正在使用${taskTypeLabel(taskType)}模型执行诊断...`);
+        const result = await diagnose(fileInfo.file_id, taskType, routeOptions);
+        setTimeout(() => navigate(`/cases/${result.case_id}`), 400);
+        return;
+      }
+      setStatus("智能体正在识别任务类型并选择目标模型...");
+      openCompletedDiagnosis(await autoDiagnose(fileInfo.file_id, undefined, routeOptions));
     } catch (caught: unknown) {
-      setError(getApiErrorMessage(caught, "诊断失败。"));
+      setError(getApiErrorMessage(caught, "智能诊断失败。"));
+      setStatus("");
+    } finally {
+      setRunning(false);
+    }
+  }
+
+  async function handleConfirmTask(confirmedTaskType: TaskType) {
+    if (!uploadedFileId) return;
+    setRunning(true);
+    setError(null);
+    setStatus(`已确认${taskTypeLabel(confirmedTaskType)}，正在执行目标模型...`);
+    try {
+      openCompletedDiagnosis(await autoDiagnose(uploadedFileId, confirmedTaskType, routeOptions));
+    } catch (caught: unknown) {
+      setError(getApiErrorMessage(caught, "确认任务后诊断失败。"));
       setStatus("");
     } finally {
       setRunning(false);
@@ -86,149 +105,112 @@ export function DiagnosisPage() {
     <div className="page-stack max-w-5xl">
       <PageHeader
         variant="workspace"
-        eyebrow="诊断工作台"
-        title="诊断任务"
-        description="选择需要执行的分析任务并上传设备样本数据，系统将自动路由至最佳模型并输出诊断依据。"
+        eyebrow="轻量诊断智能体"
+        title="智能检测"
+        description="上传设备数据后，智能体将分析输入结构、自动选择小模型并完成诊断；模糊数据会先请求确认。"
       />
       {error ? <StatusBanner variant="error" message={error} /> : null}
 
-      <div className="flex flex-col gap-6">
-        <article className="content-panel flex flex-col">
-          <div className="section-head mb-4 border-b border-slate-100 pb-4">
-            <h3 className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold">
-                1
-              </span>
-              选择诊断任务
-            </h3>
+      <article className="content-panel flex flex-col gap-5">
+        <div className="section-head">
+          <div>
+            <h3 className="flex items-center gap-2"><Bot size={20} className="text-emerald-600" />智能体工作模式</h3>
+            <p className="helper-copy">默认采用可解释的输入契约匹配，不使用大模型猜测任务类型。</p>
           </div>
+          <button className="ghost-button" type="button" onClick={() => setManualMode((value) => !value)}>
+            <Settings2 size={16} />
+            {manualMode ? "返回智能模式" : "切换到手动模式"}
+          </button>
+        </div>
+
+        {manualMode ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {taskOptions.map((item) => (
               <button
                 key={item.value}
-                className={`choice-card flex flex-col gap-3 relative ${taskType === item.value ? " selected" : ""}`}
+                className={`choice-card flex flex-col gap-3 ${taskType === item.value ? " selected" : ""}`}
                 onClick={() => setTaskType(item.value)}
                 type="button"
               >
-                {taskType === item.value ? (
-                  <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500 rounded-t-xl" />
-                ) : null}
-                <div className="flex items-center gap-3 mt-1">
-                  <div className={taskType === item.value ? "text-emerald-600" : "text-slate-400"}>{item.icon}</div>
-                  <strong className="text-lg">{item.label}</strong>
-                </div>
-                <p className="text-sm text-slate-500 leading-relaxed min-h-[40px]">{item.desc}</p>
-                <div className="mt-auto pt-3 border-t border-slate-100 flex flex-col gap-1 text-xs">
-                  <span className="text-slate-500">
-                    <strong>输入：</strong> {item.format}
-                  </span>
-                  <span className="text-slate-500">
-                    <strong>输出：</strong> {item.output}
-                  </span>
-                </div>
+                <div className="flex items-center gap-3"><Activity size={22} /><strong>{item.label}</strong></div>
+                <p className="text-sm text-slate-500">{item.desc}</p>
+                <span className="text-xs text-slate-500">输入：{item.format}</span>
               </button>
             ))}
           </div>
-        </article>
-
-        <article className="content-panel flex flex-col">
-          <div className="section-head mb-4 border-b border-slate-100 pb-4">
-            <h3 className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold">
-                2
-              </span>
-              上传样本文件
-            </h3>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {["分析文件格式与数据结构", "计算三类任务匹配分数", "选择模型并自动执行诊断"].map((item, index) => (
+              <div className="preview-card" key={item}>
+                <span className="metric-label">步骤 {index + 1}</span>
+                <strong className="text-sm">{item}</strong>
+              </div>
+            ))}
           </div>
-          <label
-            className={`upload-zone flex flex-col items-center justify-center py-12 transition-all ${
-              selectedFile ? "border-emerald-500 bg-emerald-50/50" : "hover:border-emerald-400 hover:bg-emerald-50/30"
-            }`}
-          >
-            <input
-              type="file"
-              accept=".csv,.mat,.npy,.npz"
-              onChange={(event) => setSelectedFile(event.target.files?.[0] || null)}
-            />
-            {selectedFile ? (
-              <div className="flex flex-col items-center gap-3">
-                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-2">
-                  <CheckCircle2 size={32} />
-                </div>
-                <span className="text-lg font-medium text-emerald-800">{selectedFile.name}</span>
-                <span className="text-sm text-emerald-600/80">已准备好执行 {selectedOption?.label}</span>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-3 text-slate-400">
-                <UploadCloud size={48} strokeWidth={1.5} />
-                <span className="text-base text-slate-600 mt-2">点击或拖拽上传样本文件</span>
-                <span className="text-sm">支持 {selectedOption?.format}</span>
-              </div>
-            )}
-          </label>
-        </article>
+        )}
+      </article>
 
-        <article className="content-panel flex flex-col bg-slate-50/50">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex-1 w-full">
-              {status ? (
-                <div className="flex items-center gap-3 text-emerald-700 font-medium">
-                  {running ? <span className="loading-spinner border-emerald-500 border-t-transparent" /> : null}
-                  {status}
-                </div>
-              ) : null}
-            </div>
+      <article className="content-panel flex flex-col gap-4">
+        <div className="section-head"><h3>上传检测数据</h3><span className="pill">.csv / .mat / .npy / .npz</span></div>
+        <label htmlFor="diagnosis-file-upload" className={`upload-zone flex flex-col items-center justify-center py-12 ${selectedFile ? "border-emerald-500 bg-emerald-50/50" : ""}`}>
+          <input
+            id="diagnosis-file-upload"
+            type="file"
+            accept=".csv,.mat,.npy,.npz"
+            onClick={(event) => {
+              (event.target as HTMLInputElement).value = "";
+            }}
+            onChange={(event) => {
+              setSelectedFile(event.target.files?.[0] || null);
+              setRouting(null);
+              setUploadedFileId("");
+            }}
+          />
+          {selectedFile ? (
+            <div className="flex flex-col items-center gap-2 text-emerald-700"><CheckCircle2 size={36} /><strong>{selectedFile.name}</strong><span className="text-sm">已准备好执行{manualMode ? "手动" : "智能"}诊断</span></div>
+          ) : (
+            <div className="flex flex-col items-center gap-2 text-slate-400"><UploadCloud size={46} /><span className="text-slate-600">点击或拖拽上传样本文件</span></div>
+          )}
+        </label>
+      </article>
 
-            <div className="flex items-center gap-4 w-full sm:w-auto">
-              <button className="ghost-button flex items-center gap-2" type="button" onClick={() => setShowAdvanced(!showAdvanced)}>
-                <Settings2 size={16} />
-                专家路由控制
-                {showAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </button>
-
-              <button className="action-button px-8" type="button" disabled={running || !selectedFile} onClick={handleRun}>
-                <Play size={18} />
-                {running ? "诊断执行中..." : "开始智能诊断"}
-              </button>
-            </div>
+      {routing ? (
+        <article className="content-panel flex flex-col gap-4">
+          <div className="section-head">
+            <div><h3>智能体路由判断</h3><p className="helper-copy">置信度 {(routing.confidence * 100).toFixed(0)}%</p></div>
+            <span className="pill">{routing.status}</span>
           </div>
-
-          {showAdvanced ? (
-            <div className="mt-6 p-5 bg-white border border-slate-200 rounded-xl">
-              <div className="mb-4">
-                <h4 className="font-medium text-slate-800 flex items-center gap-2">
-                  <Settings2 size={16} className="text-slate-500" /> 专家路由偏好
-                </h4>
-                <p className="text-xs text-slate-500 mt-1">
-                  此选项用于强制指定诊断模型路由，通常用于模型 A/B 测试或调试，非必填。
-                </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <label className="flex flex-col gap-2">
-                  <span className="text-sm font-medium text-slate-700">优先模型别名 (Alias)</span>
-                  <input
-                    className="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
-                    value={preferredAlias}
-                    onChange={(event) => setPreferredAlias(event.target.value)}
-                    placeholder="例如: champion, canary"
-                    type="text"
-                  />
-                </label>
-                <label className="flex flex-col gap-2">
-                  <span className="text-sm font-medium text-slate-700">显式模型 ID (Legacy)</span>
-                  <input
-                    className="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
-                    value={preferredModelId}
-                    onChange={(event) => setPreferredModelId(event.target.value)}
-                    placeholder="可选: model_abc123"
-                    type="text"
-                  />
-                </label>
-              </div>
+          {routing.evidence.length > 0 ? <ul className="text-sm text-slate-600 list-disc pl-5">{routing.evidence.map((item) => <li key={item}>{item}</li>)}</ul> : null}
+          {routing.status === "needs_confirmation" ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {routing.candidates.map((candidate) => (
+                <div className="preview-card" key={candidate.task_type}>
+                  <strong>{taskTypeLabel(candidate.task_type)}</strong>
+                  <span className="helper-copy">匹配度 {(candidate.score * 100).toFixed(0)}%</span>
+                  <button className="ghost-button" type="button" disabled={running} onClick={() => handleConfirmTask(candidate.task_type)}>确认使用此任务</button>
+                </div>
+              ))}
             </div>
           ) : null}
         </article>
-      </div>
+      ) : null}
+
+      <article className="content-panel bg-slate-50/50">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>{status ? <div className="flex items-center gap-3 text-emerald-700 font-medium">{running ? <span className="loading-spinner border-emerald-500 border-t-transparent" /> : null}{status}</div> : null}</div>
+          <div className="flex gap-3">
+            <button className="ghost-button" type="button" onClick={() => setShowAdvanced((value) => !value)}><Settings2 size={16} />专家路由控制{showAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
+            <button className="action-button px-8" type="button" disabled={running || !selectedFile} onClick={handleRun}><Play size={18} />{running ? "执行中..." : manualMode ? "开始手动诊断" : "开始智能诊断"}</button>
+          </div>
+        </div>
+        {showAdvanced ? (
+          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input className="px-3 py-2 border border-slate-200 rounded-lg text-sm" value={preferredAlias} onChange={(event) => setPreferredAlias(event.target.value)} placeholder="优先模型别名，例如 champion" />
+            <input className="px-3 py-2 border border-slate-200 rounded-lg text-sm" value={preferredModelId} onChange={(event) => setPreferredModelId(event.target.value)} placeholder="显式模型 ID（调试用）" />
+          </div>
+        ) : null}
+      </article>
+      <BatchDiagnosisPanel />
     </div>
   );
 }

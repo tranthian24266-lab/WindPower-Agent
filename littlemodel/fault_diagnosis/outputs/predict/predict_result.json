@@ -1,0 +1,20 @@
+{
+  "module": "fault_diagnosis",
+  "model_name": "NREL Binary MSCNN-BiLSTM Fault Diagnosis Model",
+  "input_file": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\fault_diagnosis\\test_data\\test_sensor1_x.npy",
+  "status": "success",
+  "prediction": {
+    "fault_class": "damaged",
+    "fault_probability": 0.5107591152191162,
+    "health_score": null,
+    "is_anomaly": null,
+    "anomaly_score": null,
+    "rul": null
+  },
+  "artifacts": {
+    "result_json": "outputs\\predict\\result.json",
+    "prediction_csv": "outputs\\predict\\prediction.csv",
+    "log": "logs\\fault_diagnosis_run.log"
+  },
+  "error": null
+}

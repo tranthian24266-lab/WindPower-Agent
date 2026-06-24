@@ -4,7 +4,7 @@
   "model_name": "SCADA Autoencoder Transfer Anomaly Detection Model",
   "model_version": "1.0.0",
   "status": "success",
-  "input_file": "C:\\Users\\luzian\\Desktop\\littlemodel\\anomaly_detection\\test_data\\test_data_sample.csv",
+  "input_file": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\anomaly_detection\\test_data\\test_data_sample.csv",
   "threshold": 0.04287222,
   "num_samples": 1000,
   "num_anomalies": 311,
@@ -81,7 +81,7 @@
     "score_name": "rmse_reconstruction_error"
   },
   "artifacts": {
-    "result_json": "C:\\Users\\luzian\\Desktop\\littlemodel\\anomaly_detection\\examples\\outputs\\result.json",
-    "prediction_csv": "C:\\Users\\luzian\\Desktop\\littlemodel\\anomaly_detection\\examples\\outputs\\prediction.csv"
+    "result_json": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\anomaly_detection\\examples\\outputs\\result.json",
+    "prediction_csv": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\anomaly_detection\\examples\\outputs\\prediction.csv"
   }
 }

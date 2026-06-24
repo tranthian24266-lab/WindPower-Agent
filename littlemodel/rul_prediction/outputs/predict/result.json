@@ -1,0 +1,44 @@
+{
+  "task_type": "rul_prediction",
+  "model_id": "hssb_svr_multifeature_60_40",
+  "model_name": "HSSB SVR Multi-feature RUL Prediction Model",
+  "model_version": "1.0.0",
+  "status": "success",
+  "input_file": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\test_data\\split_60_40\\data-20130406T221209Z.mat",
+  "rul_raw": 27.89846496941857,
+  "rul_clipped": 27.89846496941857,
+  "rul_unit": "measurement_index",
+  "risk_level": "normal",
+  "features": {
+    "sk_area_positive": 2371.1714984968653,
+    "kurtosis": 3.3697034141972573,
+    "std": 2.418413560405698,
+    "peak_to_peak": 26.56393337
+  },
+  "summary": "Extracted 4 training-aligned features from one HSSB vibration record and predicted raw RUL 27.898.",
+  "recommendation": "Continue monitoring and compare with later measurements in the same run-to-failure sequence.",
+  "preprocess": {
+    "input": {
+      "input_format": ".mat",
+      "signal_key": "vibration",
+      "signal_length": 585936
+    },
+    "feature_extraction": {
+      "sampling_rate_hz": 97656,
+      "stft_nperseg": 128,
+      "stft_noverlap": 64,
+      "sk_curve_length": 65,
+      "sk_freq_bins": 65
+    },
+    "feature_order": [
+      "sk_area_positive",
+      "kurtosis",
+      "std",
+      "peak_to_peak"
+    ]
+  },
+  "artifacts": {
+    "result_json": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\outputs\\predict\\result.json",
+    "feature_csv": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\outputs\\predict\\feature.csv"
+  }
+}

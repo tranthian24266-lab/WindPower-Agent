@@ -1,0 +1,21 @@
+{
+  "module": "fault_prediction_rul",
+  "model_name": "HSB_Degradation_Baseline",
+  "data_source": "WindTurbineHighSpeedBearingPrognosis-Data",
+  "input_file": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\test_data\\split_60_40",
+  "status": "success",
+  "metrics": {
+    "num_files": 20,
+    "rul_raw_min": -5.549188616831088,
+    "rul_raw_max": 27.89846496941857,
+    "rul_raw_mean": 11.477514731804149,
+    "health_score_mean": 0.23817310869936206
+  },
+  "artifacts": {
+    "features_csv": "outputs\\degradation_features.csv",
+    "health_indicator_plot": "outputs\\health_indicator.png",
+    "log": "logs\\rul_hsb_run.log",
+    "metrics_json": "outputs\\rul_or_degradation_metrics.json"
+  },
+  "error": null
+}

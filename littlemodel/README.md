@@ -53,3 +53,18 @@ cd C:\Users\luzian\Desktop\littlemodel
 python validate_model_library.py
 python run_all_examples.py
 ```
+
+## Minimal Runtime Wrappers
+
+For the current repo-local runnable wrappers, see `README_little_models.md`. It summarizes:
+
+- `data_check.py`
+- `smoke_test.py`
+- `train.py`
+- `predict.py`
+
+for each module, plus the current integration gaps between the packaged demo models and their upstream reproduction projects.
+
+## Add a Model Package
+
+See [`MODEL_PACKAGE_MANUAL.md`](MODEL_PACKAGE_MANUAL.md) for the required ZIP structure, file responsibilities, `model_card.json` schema, unified `predict()` contract, validation rules, publication flow, and archive/delete safeguards.

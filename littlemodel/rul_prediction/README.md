@@ -47,6 +47,10 @@ This package exposes the default HSSB remaining useful life demo model in a plat
 ```bash
 python inference.py --input test_data/split_60_40/data-20130406T221209Z.mat --output examples/outputs
 python examples/run_example.py
+python data_check.py
+python smoke_test.py
+python train.py
+python predict.py --input test_data/split_60_40/data-20130406T221209Z.mat
 ```
 
 ## Notes
@@ -54,3 +58,10 @@ python examples/run_example.py
 - This is a small RUL demo/reproduction package based on one degradation trajectory.
 - Raw RUL is the main output. Clipped RUL is retained only for safer platform display.
 - Other non-default SVR models were preserved in `optional_models/` and are not the platform default.
+
+## Minimal Runtime Workflow
+
+- `data_check.py`: reads three random `.mat` files and records visible field names, shapes, and dtypes in `logs/rul_data_check.log`.
+- `smoke_test.py`: runs one-file inference and writes a minimal `outputs/summary.json`.
+- `train.py`: builds a lightweight degradation baseline over one ordered split and writes `outputs/degradation_features.csv`, `outputs/health_indicator.png`, and `outputs/rul_or_degradation_metrics.json`.
+- `predict.py`: emits the platform-oriented unified JSON payload with `health_score` and `rul`.

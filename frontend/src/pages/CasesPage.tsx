@@ -31,8 +31,8 @@ export function CasesPage() {
           <select value={taskType} onChange={(event) => setTaskType(event.target.value)}>
             <option value="">全部任务</option>
             <option value="fault_diagnosis">故障诊断</option>
-            <option value="rul_prediction">RUL 预测</option>
-            <option value="anomaly_detection">异常检测</option>
+            <option value="rul_prediction">故障预测</option>
+            <option value="anomaly_detection">健康状态检测</option>
           </select>
           <select value={riskLevel} onChange={(event) => setRiskLevel(event.target.value)}>
             <option value="">全部风险等级</option>

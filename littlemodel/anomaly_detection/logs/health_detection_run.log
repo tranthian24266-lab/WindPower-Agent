@@ -1,0 +1,11 @@
+[2026-06-18T18:41:11] anomaly_detection smoke_test
+[2026-06-18T18:41:11] Input file: C:\Users\luzian\Desktop\windpower_agent3\littlemodel\anomaly_detection\test_data\test_data_sample.csv
+[2026-06-18T18:41:11] include_stats_cols=False
+[2026-06-18T18:41:11] Avg-style signal columns detected: ['sensor_0_avg', 'wind_speed_3_avg', 'wind_speed_4_avg', 'sensor_6_avg', 'sensor_7_avg', 'sensor_8_avg', 'sensor_9_avg', 'sensor_10_avg', 'sensor_11_avg', 'sensor_12_avg', 'sensor_13_avg', 'sensor_14_avg', 'sensor_15_avg', 'sensor_16_avg', 'sensor_17_avg', 'sensor_18_avg', 'sensor_19_avg', 'sensor_20_avg', 'sensor_21_avg', 'sensor_22_avg', 'sensor_23_avg', 'sensor_24_avg', 'sensor_25_avg', 'reactive_power_27_avg', 'reactive_power_28_avg', 'power_29_avg', 'power_30_avg', 'sensor_31_avg', 'sensor_32_avg', 'sensor_33_avg', 'sensor_34_avg', 'sensor_35_avg', 'sensor_36_avg', 'sensor_37_avg', 'sensor_38_avg', 'sensor_39_avg', 'sensor_40_avg', 'sensor_41_avg', 'sensor_43_avg', 'sensor_52_avg', 'sensor_53_avg', 'sensor_1_avg_sin', 'sensor_1_avg_cos', 'sensor_2_avg_sin', 'sensor_2_avg_cos', 'sensor_5_avg_sin', 'sensor_5_avg_cos', 'sensor_42_avg_sin', 'sensor_42_avg_cos']
+[2026-06-18T18:41:11] Derived checkpoint columns preserved: ['sensor_1_avg_sin', 'sensor_1_avg_cos', 'sensor_2_avg_sin', 'sensor_2_avg_cos', 'sensor_5_avg_sin', 'sensor_5_avg_cos', 'sensor_42_avg_sin', 'sensor_42_avg_cos']
+[2026-06-18T18:41:11] Extra checkpoint columns preserved: ['sensor_44', 'sensor_45', 'sensor_47', 'sensor_48', 'sensor_50', 'sensor_51']
+[2026-06-18T18:41:11] Stats-style columns detected: []
+[2026-06-18T18:41:11] Stats-style columns dropped by default: []
+[2026-06-18T18:41:11] Wrote prepared input CSV to C:\Users\luzian\Desktop\windpower_agent3\littlemodel\anomaly_detection\outputs\prepared_input.csv
+[2026-06-18T18:41:12] Smoke test completed successfully. Summary: {'num_samples': 1000, 'num_anomalies': 311, 'anomaly_ratio': 0.311, 'mean_anomaly_score': 0.057409387081861496, 'max_anomaly_score': 0.42429423332214355, 'threshold': 0.04287222}
+[2026-06-18T18:41:12] train.py completed by running the packaged detector demo with the existing checkpoint. This wrapper does not refit a new EnergyFaultDetector model yet.

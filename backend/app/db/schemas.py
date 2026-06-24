@@ -11,6 +11,12 @@ class DiagnoseRequest(BaseModel):
     options: Optional[Dict[str, Any]] = None
 
 
+class AutoDiagnoseRequest(BaseModel):
+    file_id: str = Field(min_length=1)
+    confirmed_task_type: Optional[str] = None
+    options: Optional[Dict[str, Any]] = None
+
+
 class ChatRequest(BaseModel):
     case_id: str = Field(min_length=1)
     question: str = Field(min_length=1)

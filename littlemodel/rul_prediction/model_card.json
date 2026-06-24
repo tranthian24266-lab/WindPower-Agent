@@ -27,5 +27,10 @@
     "Raw RUL is the primary prediction. Clipped RUL is included only as a display-safe engineering guard.",
     "The packaged inference path currently supports only the .mat vibration format used by the local training code."
   ],
+  "input_contract": {
+    "accepted_suffixes": [".mat"],
+    "container_types": ["matlab"],
+    "required_array_keys": ["vibration"]
+  },
   "adapter_entrypoint": "inference.py:predict"
 }

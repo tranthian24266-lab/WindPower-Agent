@@ -1,0 +1,7 @@
+{
+  "accuracy": 0.9775,
+  "f1_score": 0.9774886036055753,
+  "num_samples": 400,
+  "healthy_mean_probability": 0.48924094438552856,
+  "damaged_mean_probability": 0.5107590556144714
+}

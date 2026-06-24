@@ -77,5 +77,11 @@
     "Anomaly score is RMSE reconstruction error from an autoencoder trained for decoder-transfer adaptation, not a direct fault classifier.",
     "Threshold and reported metrics come from the current decoder-tuning checkpoint for source turbine 13 to target turbine 10."
   ],
+  "input_contract": {
+    "accepted_suffixes": [".csv"],
+    "container_types": ["tabular"],
+    "required_columns": ["sensor_0_avg", "wind_speed_3_avg", "wind_speed_4_avg", "power_29_avg", "power_30_avg"],
+    "minimum_required_column_ratio": 0.8
+  },
   "adapter_entrypoint": "inference.py:predict"
 }

@@ -2,6 +2,8 @@ import axios from "axios";
 
 import type {
   AgentRun,
+  AutoDiagnoseResponse,
+  BatchDiagnoseResponse,
   AgentRunTimelineItem,
   AgentRunSubmission,
   AgentRunSummary,
@@ -27,6 +29,7 @@ import type {
   KnowledgeIndexStatus,
   KnowledgeReindexResponse,
   ModelSummary,
+  ModelPackageUpload,
   ObservabilitySummary,
   ReviewTaskDetail,
   ReviewTaskSummary,
@@ -190,6 +193,49 @@ export async function validateModelCatalogVersion(modelVersionId: string): Promi
   return response.data;
 }
 
+export async function uploadModelPackage(file: File): Promise<ModelPackageUpload> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await client.post<{ package: ModelPackageUpload }>("/api/model-catalog/packages/upload", formData);
+  return response.data.package;
+}
+
+export async function updateModelPackageMetadata(
+  uploadId: string,
+  payload: { model_name?: string; description?: string; dataset?: string; limitations?: string[] },
+): Promise<ModelPackageUpload> {
+  const response = await client.put<{ package: ModelPackageUpload }>(
+    `/api/model-catalog/packages/${uploadId}/metadata`,
+    payload,
+  );
+  return response.data.package;
+}
+
+export async function validateModelPackage(uploadId: string): Promise<ModelPackageUpload> {
+  const response = await client.post<{ package: ModelPackageUpload }>(
+    `/api/model-catalog/packages/${uploadId}/validate`,
+  );
+  return response.data.package;
+}
+
+export async function publishModelPackage(uploadId: string): Promise<ModelPackageUpload> {
+  const response = await client.post<{ package: ModelPackageUpload }>(
+    `/api/model-catalog/packages/${uploadId}/publish`,
+  );
+  return response.data.package;
+}
+
+export async function archiveModelVersion(modelVersionId: string): Promise<CatalogModelVersion> {
+  const response = await client.post<{ model_version: CatalogModelVersion }>(
+    `/api/model-catalog/model-versions/${modelVersionId}/archive`,
+  );
+  return response.data.model_version;
+}
+
+export async function deleteModelVersion(modelVersionId: string): Promise<void> {
+  await client.delete(`/api/model-catalog/model-versions/${modelVersionId}`);
+}
+
 export async function updateModelAlias(
   familyId: string,
   aliasName: string,
@@ -247,6 +293,33 @@ export async function diagnose(
   });
   return response.data;
 }
+export async function autoDiagnose(
+  fileId: string,
+  confirmedTaskType?: TaskType,
+  options?: { preferredAlias?: string; preferredModelId?: string },
+): Promise<AutoDiagnoseResponse> {
+  const response = await client.post<AutoDiagnoseResponse>("/api/diagnose/auto", {
+    file_id: fileId,
+    confirmed_task_type: confirmedTaskType || undefined,
+    options: options
+      ? {
+          preferred_alias: options.preferredAlias || undefined,
+          preferred_model_id: options.preferredModelId || undefined,
+        }
+      : undefined,
+  });
+  return response.data;
+}
+
+export async function batchDiagnose(files: File[]): Promise<BatchDiagnoseResponse> {
+  const formData = new FormData();
+  for (const file of files) formData.append("files", file);
+  const response = await client.post<BatchDiagnoseResponse>("/api/diagnose/batch", formData, {
+    timeout: 600000,
+  });
+  return response.data;
+}
+
 
 export async function getCases(filters?: {
   taskType?: string;

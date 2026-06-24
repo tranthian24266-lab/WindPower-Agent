@@ -46,6 +46,10 @@ This package exposes the default SCADA autoencoder transfer-learning anomaly det
 ```bash
 python inference.py --input test_data/test_data_sample.csv --output examples/outputs
 python examples/run_example.py
+python data_check.py
+python smoke_test.py
+python train.py
+python predict.py --input test_data/test_data_sample.csv
 ```
 
 ## Notes
@@ -54,3 +58,15 @@ python examples/run_example.py
 - `anomaly_score` is the autoencoder RMSE reconstruction error.
 - Samples with `anomaly_score >= 0.04287222` are labeled as anomalies.
 - Threshold, source turbine, target turbine, and published local metrics were recovered from the packaged checkpoint metadata.
+
+## Minimal Runtime Workflow
+
+- `data_check.py`: inspects one CARE2Compare CSV, logs detected `Avg` columns, and reports whether checkpoint-aligned features are present.
+- `smoke_test.py`: prepares one single-file demo, writes `outputs/anomaly_scores.csv`, `outputs/anomaly_plot.png`, and `outputs/summary.json`.
+- `train.py`: currently reuses the packaged checkpoint to run the minimal detector demo end-to-end; it does not refit a new autoencoder yet.
+- `predict.py`: emits the platform-oriented unified JSON payload and keeps `--include_stats_cols` off by default.
+
+Default column policy:
+
+- Keep `Avg / average / mean` style columns by default.
+- Exclude `Min / Max / Std` style columns by default unless `--include_stats_cols` is passed.

@@ -2,10 +2,13 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, UploadFile
+from pydantic import BaseModel, Field
 
-from app.core.auth import require_write_api_key
+from app.core.audit_service import AuditService
+from app.core.auth import ActorContext, require_permissions, require_write_api_key
 from app.core.model_catalog import ModelCatalogService
+from app.core.model_package_service import ModelPackageError, ModelPackageService
 from app.core.model_router import ModelRouterError, ModelRouterService, ModelSelectionRequest
 from app.core.model_sync import ModelSyncError, ModelSyncService
 from app.core.model_validation import ModelValidationError, ModelValidationService
@@ -14,6 +17,13 @@ from app.db.schemas import ModelAliasUpdateRequest
 
 router = APIRouter(prefix="/model-catalog", tags=["model-catalog"])
 SYSTEM_ALIASES = {"default", "champion", "canary", "fallback"}
+
+
+class ModelPackageMetadataUpdate(BaseModel):
+    model_name: Optional[str] = Field(default=None, max_length=160)
+    description: Optional[str] = Field(default=None, max_length=2000)
+    dataset: Optional[str] = Field(default=None, max_length=500)
+    limitations: Optional[list[str]] = None
 
 
 @router.get("/models")
@@ -110,6 +120,165 @@ def sync_model_catalog(request: Request) -> dict[str, object]:
     }
 
 
+@router.post("/packages/upload")
+async def upload_model_package(
+    request: Request,
+    file: UploadFile = File(...),
+    actor: ActorContext = Depends(require_permissions("model_catalog:manage")),
+) -> dict[str, object]:
+    settings = request.app.state.settings
+    content = await file.read(settings.model_package_max_upload_bytes + 1)
+    try:
+        package = ModelPackageService(settings).create_upload(file.filename or "model.zip", content)
+    except ModelPackageError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    AuditService(settings).record(
+        actor=actor,
+        action="model_package.upload",
+        resource_type="model_package",
+        resource_id=str(package["upload_id"]),
+        details={"filename": package["filename"], "sha256": package["sha256"]},
+    )
+    return {"status": "ok", "package": package}
+
+
+@router.get("/packages/{upload_id}")
+def get_model_package(request: Request, upload_id: str) -> dict[str, object]:
+    try:
+        package = ModelPackageService(request.app.state.settings).get_upload(upload_id)
+    except ModelPackageError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return {"status": "ok", "package": package}
+
+
+@router.put("/packages/{upload_id}/metadata")
+def update_model_package_metadata(
+    request: Request,
+    upload_id: str,
+    payload: ModelPackageMetadataUpdate,
+    actor: ActorContext = Depends(require_permissions("model_catalog:manage")),
+) -> dict[str, object]:
+    try:
+        package = ModelPackageService(request.app.state.settings).update_metadata(
+            upload_id,
+            payload.model_dump(exclude_unset=True),
+        )
+    except ModelPackageError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    AuditService(request.app.state.settings).record(
+        actor=actor,
+        action="model_package.metadata_update",
+        resource_type="model_package",
+        resource_id=upload_id,
+    )
+    return {"status": "ok", "package": package}
+
+
+@router.post("/packages/{upload_id}/validate")
+def validate_model_package(
+    request: Request,
+    upload_id: str,
+    actor: ActorContext = Depends(require_permissions("model_catalog:manage")),
+) -> dict[str, object]:
+    try:
+        package = ModelPackageService(request.app.state.settings).validate_upload(upload_id)
+    except ModelPackageError as exc:
+        AuditService(request.app.state.settings).record(
+            actor=actor,
+            action="model_package.validate",
+            resource_type="model_package",
+            resource_id=upload_id,
+            outcome="failed",
+            details={"error": str(exc)},
+        )
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    AuditService(request.app.state.settings).record(
+        actor=actor,
+        action="model_package.validate",
+        resource_type="model_package",
+        resource_id=upload_id,
+    )
+    return {"status": "ok", "package": package}
+
+
+@router.post("/packages/{upload_id}/publish")
+def publish_model_package(
+    request: Request,
+    upload_id: str,
+    actor: ActorContext = Depends(require_permissions("model_catalog:manage")),
+) -> dict[str, object]:
+    try:
+        package = ModelPackageService(request.app.state.settings).publish_upload(upload_id)
+    except ModelPackageError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    AuditService(request.app.state.settings).record(
+        actor=actor,
+        action="model_package.publish",
+        resource_type="model_version",
+        resource_id=str(package["published_model_version_id"]),
+        details={"upload_id": upload_id, "model_dir": package["published_model_dir"]},
+    )
+    return {"status": "ok", "package": package}
+
+
+@router.delete("/packages/{upload_id}")
+def discard_model_package(
+    request: Request,
+    upload_id: str,
+    actor: ActorContext = Depends(require_permissions("model_catalog:manage")),
+) -> dict[str, object]:
+    try:
+        ModelPackageService(request.app.state.settings).discard_upload(upload_id)
+    except ModelPackageError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    AuditService(request.app.state.settings).record(
+        actor=actor,
+        action="model_package.discard",
+        resource_type="model_package",
+        resource_id=upload_id,
+    )
+    return {"status": "deleted", "upload_id": upload_id}
+
+
+@router.post("/model-versions/{model_version_id}/archive")
+def archive_model_catalog_version(
+    request: Request,
+    model_version_id: str,
+    actor: ActorContext = Depends(require_permissions("model_catalog:manage")),
+) -> dict[str, object]:
+    try:
+        version = ModelPackageService(request.app.state.settings).archive_version(model_version_id)
+    except ModelPackageError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    AuditService(request.app.state.settings).record(
+        actor=actor,
+        action="model_version.archive",
+        resource_type="model_version",
+        resource_id=model_version_id,
+    )
+    return {"status": "ok", "model_version": version}
+
+
+@router.delete("/model-versions/{model_version_id}")
+def delete_model_catalog_version(
+    request: Request,
+    model_version_id: str,
+    actor: ActorContext = Depends(require_permissions("model_catalog:manage")),
+) -> dict[str, object]:
+    try:
+        result = ModelPackageService(request.app.state.settings).delete_version(model_version_id)
+    except ModelPackageError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    AuditService(request.app.state.settings).record(
+        actor=actor,
+        action="model_version.delete",
+        resource_type="model_version",
+        resource_id=model_version_id,
+        details={"trash_path": result["trash_path"]},
+    )
+    return result
+
+
 @router.post("/model-versions/{model_version_id}/validate", dependencies=[Depends(require_write_api_key)])
 def validate_model_catalog_version(request: Request, model_version_id: str) -> dict[str, object]:
     settings = request.app.state.settings
@@ -140,6 +309,11 @@ def assign_model_alias(
 
     settings = request.app.state.settings
     service = ModelCatalogService(settings.database_path)
+    version = service.get_model_version_detail(payload.model_version_id)
+    if version is None:
+        raise HTTPException(status_code=404, detail=f"Model version does not exist: {payload.model_version_id}")
+    if version["validation_status"] != "passed" or version["status"] == "archived":
+        raise HTTPException(status_code=409, detail="Only validated, non-archived model versions can receive aliases.")
     timestamp = datetime.now(timezone.utc).isoformat()
     try:
         with service.database.connect() as connection:

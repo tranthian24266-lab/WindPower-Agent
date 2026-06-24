@@ -22,9 +22,9 @@ export function taskTypeLabel(taskType?: string | null): string {
     case "fault_diagnosis":
       return "故障诊断";
     case "rul_prediction":
-      return "RUL 预测";
+      return "故障预测";
     case "anomaly_detection":
-      return "异常检测";
+      return "健康状态检测";
     default:
       return taskType || "--";
   }
@@ -35,9 +35,9 @@ export function modelNameZh(modelId: string, fallback?: string | null): string {
     case "nrel_binary_mscnn_bilstm_sensor1":
       return "齿轮箱故障诊断模型";
     case "hssb_svr_multifeature_60_40":
-      return "轴承剩余寿命预测模型";
+      return "轴承故障预测模型";
     case "scada_ae_decoder_transfer_13_to_10":
-      return "SCADA 异常检测模型";
+      return "SCADA 健康状态检测模型";
     default:
       return fallback || modelId;
   }
@@ -46,11 +46,11 @@ export function modelNameZh(modelId: string, fallback?: string | null): string {
 export function shortModelDisplayName(value?: string | null): string {
   switch (value) {
     case "SCADA Autoencoder Transfer Anomaly Detection Model":
-      return "Anomaly Detection Model";
+      return "Health Detection Model";
     case "NREL Binary MSCNN-BiLSTM Fault Diagnosis Model":
       return "Fault Diagnosis Model";
     case "HSSB SVR Multi-feature RUL Prediction Model":
-      return "RUL Prediction Model";
+      return "Fault Prediction Model";
     default:
       return value || "--";
   }
@@ -105,16 +105,16 @@ export function modelSummaryZh(model: {
     case "hssb_svr_multifeature_60_40":
       return "基于多特征与支持向量回归的剩余寿命预测模型，输出轴承 RUL 估计值。";
     case "scada_ae_decoder_transfer_13_to_10":
-      return "基于 SCADA 自编码器迁移学习的异常检测模型，通过重构误差识别异常样本并给出风险等级。";
+      return "基于 SCADA 自编码器迁移学习的健康状态检测模型，通过重构误差识别异常样本并给出风险等级。";
     default:
       if (model.task_type === "fault_diagnosis") {
         return "用于风电设备故障诊断的已注册模型。";
       }
       if (model.task_type === "rul_prediction") {
-        return "用于风电设备剩余寿命预测的已注册模型。";
+        return "用于风电设备故障预测与寿命趋势评估的已注册模型。";
       }
       if (model.task_type === "anomaly_detection") {
-        return "用于风电设备异常检测的已注册模型。";
+        return "用于风电设备健康状态检测的已注册模型。";
       }
       return model.dataset || model.model_id;
   }
@@ -127,20 +127,20 @@ export function catalogDescriptionZh(options: {
 }): string {
   switch (options.familyCode) {
     case "scada_ae_decoder_transfer_13_to_10":
-      return "面向风机 SCADA 数据的迁移学习异常检测模型，用重构误差识别目标机组的异常运行片段。";
+      return "面向风机 SCADA 数据的迁移学习健康状态检测模型，用重构误差识别目标机组的异常运行片段。";
     case "nrel_binary_mscnn_bilstm_sensor1":
       return "基于振动信号的二分类故障诊断模型，适合作为现场初筛与复核入口。";
     case "hssb_svr_multifeature_60_40":
-      return "基于多特征与支持向量回归的剩余寿命预测模型，适合做寿命趋势研判和维护计划参考。";
+      return "基于多特征与支持向量回归的故障预测模型，适合做寿命趋势研判和维护计划参考。";
     default:
       if (options.taskType === "fault_diagnosis") {
         return "用于风电设备故障诊断的已注册模型，可辅助判断设备当前是否存在异常故障征兆。";
       }
       if (options.taskType === "rul_prediction") {
-        return "用于风电设备剩余寿命预测的已注册模型，可辅助评估部件寿命趋势与检修窗口。";
+        return "用于风电设备故障预测的已注册模型，可辅助评估部件寿命趋势与检修窗口。";
       }
       if (options.taskType === "anomaly_detection") {
-        return "用于风电设备异常检测的已注册模型，可辅助识别运行数据中的偏离模式与风险样本。";
+        return "用于风电设备健康状态检测的已注册模型，可辅助识别运行数据中的偏离模式与风险样本。";
       }
       return options.fallback || "--";
   }

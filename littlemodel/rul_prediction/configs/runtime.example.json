@@ -1,0 +1,9 @@
+{
+  "default_input": "test_data/split_60_40/data-20130406T221209Z.mat",
+  "default_data_dir": "test_data/split_60_40",
+  "external_data_env": "RUL_DATA_DIR",
+  "notes": [
+    "The packaged baseline reads .mat files with a `vibration` variable.",
+    "train.py builds a degradation baseline over one ordered split instead of forcing the original GRU notebook path."
+  ]
+}

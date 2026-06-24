@@ -79,11 +79,19 @@ class RunManager:
             finished_at=None,
         )
 
-    def complete_run(self, run_id: str, *, output_payload: dict[str, Any] | None = None, current_step: str | None = None) -> None:
+    def complete_run(
+        self,
+        run_id: str,
+        *,
+        output_payload: dict[str, Any] | None = None,
+        current_step: str | None = None,
+        case_id: str | None = None,
+    ) -> None:
         self._update_run(
             run_id,
             status="succeeded",
             current_step=current_step,
+            case_id=case_id,
             output_json=self._dump_json(output_payload),
             error_json=None,
             finished_at=_utcnow(),
@@ -560,6 +568,7 @@ class RunManager:
         *,
         status: str,
         current_step: str | None = None,
+        case_id: str | None = None,
         output_json: str | None = None,
         error_json: str | None = None,
         finished_at: str | None = None,
@@ -570,13 +579,14 @@ class RunManager:
                 UPDATE agent_runs
                 SET status = ?,
                     current_step = ?,
+                    case_id = COALESCE(?, case_id),
                     output_json = COALESCE(?, output_json),
                     error_json = ?,
                     updated_at = ?,
                     finished_at = ?
                 WHERE run_id = ?
                 """,
-                (status, current_step, output_json, error_json, _utcnow(), finished_at, run_id),
+                (status, current_step, case_id, output_json, error_json, _utcnow(), finished_at, run_id),
             )
 
     def _dump_json(self, payload: Any) -> str | None:

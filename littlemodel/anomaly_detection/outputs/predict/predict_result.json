@@ -1,0 +1,21 @@
+{
+  "module": "health_detection",
+  "model_name": "SCADA Autoencoder Transfer Anomaly Detection Model",
+  "input_file": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\anomaly_detection\\test_data\\test_data_sample.csv",
+  "status": "success",
+  "prediction": {
+    "fault_class": null,
+    "fault_probability": null,
+    "health_score": 0.6890000000000001,
+    "is_anomaly": true,
+    "anomaly_score": 0.057409387081861496,
+    "rul": null
+  },
+  "artifacts": {
+    "prepared_input": "outputs\\predict\\prepared_input.csv",
+    "result_json": "outputs\\predict\\result.json",
+    "prediction_csv": "outputs\\predict\\prediction.csv",
+    "log": "logs\\health_detection_run.log"
+  },
+  "error": null
+}

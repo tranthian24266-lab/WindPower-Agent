@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import sqlite3
 
-from app.core.model_catalog import ModelCatalogService
+from app.core.model_catalog import ModelAliasRecord, ModelCatalogService, ModelFamilyRecord, ModelVersionRecord, to_json_text
 from app.core.model_sync import ModelSyncError, ModelSyncService
 from app.db.database import Database, _rewrite_qmark_to_percent_s
 from app.db.migration_runner import MigrationRunner
@@ -172,6 +172,81 @@ def test_model_sync_rejects_multiple_active_models_for_same_task(tmp_path: Path)
     catalog = ModelCatalogService(tmp_path / "windpower.db")
     sync_runs = catalog.list_sync_runs()
     assert sync_runs[-1]["status"] == "failed"
+
+
+def test_model_sync_prunes_stale_legacy_registry_rows(tmp_path: Path) -> None:
+    database_path = tmp_path / "windpower.db"
+    service = ModelSyncService(database_path, LITTLEMODEL_ROOT)
+    service.sync_registry()
+    catalog = ModelCatalogService(database_path)
+
+    timestamp = "2026-06-18T00:00:00+00:00"
+    with catalog.database.connect() as connection:
+        catalog.upsert_family(
+            connection,
+            ModelFamilyRecord(
+                family_id="family::legacy-anomaly-old",
+                family_code="legacy-anomaly-old",
+                display_name="Legacy Anomaly Old",
+                task_type="anomaly_detection",
+                subtask_type=None,
+                component=None,
+                description="stale legacy sync row",
+                owner="legacy_registry_sync",
+                tags_json=to_json_text(["anomaly_detection", "legacy-registry"]),
+                created_at=timestamp,
+                updated_at=timestamp,
+            ),
+        )
+        catalog.upsert_version(
+            connection,
+            ModelVersionRecord(
+                model_version_id="model_version::legacy-anomaly-old",
+                family_id="family::legacy-anomaly-old",
+                legacy_model_id="legacy-anomaly-old",
+                version="0.1.0",
+                status="draft",
+                validation_status="pending",
+                model_dir="anomaly_detection",
+                entrypoint="inference.py:predict",
+                framework=None,
+                runtime=None,
+                dataset=None,
+                paper_title=None,
+                input_format=to_json_text([".csv"]),
+                output_schema_json=None,
+                feature_names_json=None,
+                limitations_json=to_json_text([]),
+                priority=100,
+                capabilities_json=to_json_text({"task_type": "anomaly_detection"}),
+                metadata_json=to_json_text({"source_status": "inactive"}),
+                created_at=timestamp,
+                updated_at=timestamp,
+                last_validated_at=None,
+            ),
+        )
+        catalog.upsert_alias(
+            connection,
+            ModelAliasRecord(
+                alias_id="alias::family::legacy-anomaly-old::default",
+                family_id="family::legacy-anomaly-old",
+                alias_name="default",
+                model_version_id="model_version::legacy-anomaly-old",
+                created_at=timestamp,
+                updated_at=timestamp,
+            ),
+        )
+
+    assert any(item["family_id"] == "family::legacy-anomaly-old" for item in catalog.list_families())
+
+    service.sync_registry()
+
+    families = catalog.list_families()
+    versions = catalog.list_versions()
+    aliases = catalog.list_aliases()
+    assert all(item["family_id"] != "family::legacy-anomaly-old" for item in families)
+    assert all(item["legacy_model_id"] != "legacy-anomaly-old" for item in versions)
+    assert all(item["family_id"] != "family::legacy-anomaly-old" for item in aliases)
 
 
 def test_database_rewrites_qmark_placeholders_for_postgres() -> None:

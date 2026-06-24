@@ -29,7 +29,8 @@ export function DashboardPage() {
   const todayCasesCount = cases.slice(0, 10).length;
   const onlineModelsCount = models.length;
   const faultModelsCount = models.filter((item) => item.task_type === "fault_diagnosis").length;
-  const anomalyModelsCount = models.filter((item) => item.task_type === "anomaly_detection").length;
+  const predictionModelsCount = models.filter((item) => item.task_type === "rul_prediction").length;
+  const healthModelsCount = models.filter((item) => item.task_type === "anomaly_detection").length;
 
   return (
     <div className="page-stack">
@@ -61,8 +62,9 @@ export function DashboardPage() {
             trend: { value: `${todayCasesCount} 今日新增`, isUp: true, isGood: true },
           },
           { label: "在线诊断模型", value: onlineModelsCount, icon: <Box size={20} /> },
-          { label: "故障分类模型", value: faultModelsCount, icon: <AlertTriangle size={20} /> },
-          { label: "异常检测模型", value: anomalyModelsCount, icon: <Activity size={20} /> },
+          { label: "故障诊断模型", value: faultModelsCount, icon: <AlertTriangle size={20} /> },
+          { label: "故障预测模型", value: predictionModelsCount, icon: <Box size={20} /> },
+          { label: "健康状态检测模型", value: healthModelsCount, icon: <Activity size={20} /> },
         ]}
       />
 

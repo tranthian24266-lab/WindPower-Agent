@@ -45,6 +45,64 @@ export interface DiagnoseResponse {
   result: Record<string, unknown>;
 }
 
+export interface AutoRoutingCandidate {
+  task_type: TaskType;
+  model_id: string;
+  model_name?: string | null;
+  score: number;
+  evidence: string[];
+  mismatches: string[];
+}
+
+export interface AutoDiagnosisRouting {
+  status: "selected" | "needs_confirmation" | "unsupported" | "confirmed";
+  confidence: number;
+  selected_task_type?: TaskType | null;
+  selected_model_id?: string | null;
+  evidence: string[];
+  candidates: AutoRoutingCandidate[];
+  input_profile: {
+    filename: string;
+    suffix: string;
+    size_bytes: number;
+    container_type: string;
+    columns: string[];
+    array_shape?: number[] | null;
+    array_keys: string[];
+    warnings: string[];
+  };
+}
+
+export interface AutoDiagnosePendingResponse {
+  status: "needs_confirmation" | "unsupported";
+  file_id: string;
+  routing: AutoDiagnosisRouting;
+}
+
+export type AutoDiagnoseResponse = (DiagnoseResponse & { routing: AutoDiagnosisRouting }) | AutoDiagnosePendingResponse;
+
+export interface BatchDiagnoseItem {
+  filename: string;
+  file_id?: string;
+  status: string;
+  run_id?: string;
+  case_id?: string;
+  task_type?: TaskType | null;
+  model_id?: string | null;
+  routing?: AutoDiagnosisRouting;
+  error?: { type: string; message: string };
+}
+
+export interface BatchDiagnoseResponse {
+  status: "completed" | "partial";
+  batch_id: string;
+  total: number;
+  succeeded: number;
+  needs_confirmation: number;
+  failed: number;
+  items: BatchDiagnoseItem[];
+}
+
 export interface CaseSummary {
   case_id: string;
   file_id: string;
@@ -627,6 +685,47 @@ export interface CatalogValidateResponse {
   status: string;
   summary: string;
   details?: Record<string, unknown> | null;
+}
+
+export interface ModelPackageInspection {
+  model_card: Record<string, unknown> & {
+    model_id: string;
+    family_code?: string;
+    model_name: string;
+    model_version: string;
+    task_type: TaskType | string;
+    description?: string;
+    dataset?: string;
+    limitations?: string[];
+    parameter_schema?: Record<string, unknown>;
+  };
+  entrypoint: string;
+  sample_path: string;
+  weight_files: string[];
+  requirements: string[];
+  requirements_installation: string;
+  warnings: string[];
+}
+
+export interface ModelPackageUpload {
+  upload_id: string;
+  filename: string;
+  sha256: string;
+  size_bytes: number;
+  status: "inspected" | "validated" | "published";
+  created_at: string;
+  updated_at: string;
+  inspection: ModelPackageInspection;
+  validation?: {
+    status: string;
+    validated_at: string;
+    sample_path: string;
+    result_keys: string[];
+    result_status?: string | null;
+    stdout?: string;
+  } | null;
+  published_model_version_id?: string | null;
+  published_model_dir?: string | null;
 }
 
 export interface AuditLog {

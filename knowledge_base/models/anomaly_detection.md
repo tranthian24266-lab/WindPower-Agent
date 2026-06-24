@@ -1,5 +1,27 @@
-# anomaly_detection
+# SCADA Autoencoder Transfer Anomaly Detection Model
 
-- Source README: `C:\Users\luzian\Desktop\littlemodel\anomaly_detection\README.md`
-- Source model_card: `C:\Users\luzian\Desktop\littlemodel\anomaly_detection\model_card.json`
-- Default model: `scada_ae_decoder_transfer_13_to_10`
+## 模型概述
+此模型专用于风电机组的**异常检测 (Anomaly Detection)**，主要针对风机 SCADA (Supervisory Control and Data Acquisition) 时序数据进行深入挖掘。模型通过结合**自编码器 (Autoencoder)** 无监督学习与**迁移学习 (Transfer Learning)** 技术，能够高效地在大型风电场中泛化，并准确识别出设备的早期隐患和非正常运行状态。
+
+## 核心机制与原理
+
+### 1. 基于自编码器的正常行为模型 (NBM)
+- **无监督重构**：模型首先利用风机在健康状态下产生的多维度 SCADA 时序数据（如轴承温度、环境温度、发电机转速、有功功率等）进行训练。
+- **重构误差检测**：由于自编码器被训练为仅能完美重构“正常状态”的数据，当输入异常数据（即风机出现故障前兆或处于故障状态）时，自编码器的重构误差 (Reconstruction Error) 会显著增加。
+- **异常判定**：系统通过比对实时数据的重构误差与预设的安全阈值。一旦超出该阈值，即刻标记为异常点 (Anomaly)，并记录发生异常的具体时间戳。
+
+### 2. 迁移学习 (Transfer Learning)
+- **解决数据孤岛与冷启动**：在实际工业场景中，新投入使用的风机或刚刚大修过的风机往往缺乏足够的历史正常数据来训练专属的自编码器。
+- **源域与目标域适配**：模型采用迁移学习技术，利用同型号或环境相似的其他风机（源域）积累的海量高价值数据进行“预训练 (Pre-training)”。
+- **微调优化**：随后，将预训练模型的核心权重迁移至当前目标风机，并利用该风机少量的近期健康数据进行网络微调 (Fine-tuning)。这不仅极大降低了模型针对每一台机器单独训练的计算成本，还有效克服了目标风机由于数据不足导致的模型过拟合或欠拟合问题。
+
+## 模型输入特征
+该模型通常接收经过预处理的 SCADA 特征，例如：
+- 发电机轴承温度 (Generator Bearing Temperature)
+- 齿轮箱油温 (Gearbox Oil Temperature)
+- 风速与转速的相对偏差等
+
+## 优势与应用场景
+- **端到端非线性分析**：相比传统的 SCADA 阈值报警，深度自编码器能够捕获多个传感参数之间高度非线性的关联性。
+- **早期预警**：可以在严重的物理损坏发生前数天甚至数周，捕捉到微小的趋势变动，是风机预测性维护 (Predictive Maintenance) 的关键基石。
+- **高泛化能力**：得益于迁移学习，模型能够迅速适应同一风场不同位置、甚至是不同风场的风电机组。

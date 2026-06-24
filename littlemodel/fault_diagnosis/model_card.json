@@ -29,5 +29,15 @@
     "The default packaged model is sensor1 only; sensor2 and voting variants are not the platform default.",
     "Windowing and per-window z-score normalization must match training-time preprocessing."
   ],
+  "input_contract": {
+    "accepted_suffixes": [".npy", ".npz", ".mat", ".csv"],
+    "container_types": ["numeric_array", "numeric_archive", "matlab", "tabular"],
+    "required_last_dimension": 4096,
+    "alternative_array_keys": ["AN9", "AN8"],
+    "routing_notes": [
+      "NPY arrays should end with a 4096-sample window dimension.",
+      "MAT inputs should expose AN9 or AN8. CSV raw-signal inputs may require user confirmation."
+    ]
+  },
   "adapter_entrypoint": "inference.py:predict"
 }

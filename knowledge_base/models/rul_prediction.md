@@ -1,5 +1,29 @@
-# rul_prediction
+# HSSB SVR Multi-feature RUL Prediction Model
 
-- Source README: `C:\Users\luzian\Desktop\littlemodel\rul_prediction\README.md`
-- Source model_card: `C:\Users\luzian\Desktop\littlemodel\rul_prediction\model_card.json`
-- Default model: `hssb_svr_multifeature_60_40`
+## 模型概述
+此模型专用于风力发电机组高速轴轴承 (High Speed Shaft Bearing, HSSB) 的**剩余使用寿命预测 (Remaining Useful Life Prediction, RUL)**。该模型并未采用计算极高、高度依赖大数据的深度学习网络，而是采用了一种轻量级、具备极强鲁棒性和可解释性的经典机器学习架构——**多特征支持向量回归 (Multi-feature SVR)**。
+
+## 特征提取体系 (Multi-feature)
+
+对于风电轴承的退化趋势，使用单一特征往往无法全面反映复杂的磨损进程。该系统从高达 97,656 Hz 采样率的极高频 `.mat` 原始振动信号中，精心提取了 4 个相互独立且能够高度反映疲劳和磨损演变的退化指标：
+
+1. **谱峭度正面积 (sk_area_positive)**：
+   - 谱峭度 (Spectral Kurtosis) 是识别信号中瞬态冲击成分最敏感的指标。
+   - 提取正面积代表了信号中显著超出背景噪声的高频共振能量，这是轴承出现早期微小剥落或点蚀的最直接证据。
+2. **峭度 (Kurtosis)**：
+   - 统计时域指标，描述信号概率密度分布的陡缓程度。健康的轴承信号呈高斯分布（峭度约等于3），而随着故障恶化和脉冲冲击的增加，峭度值会急剧上升。
+3. **标准差 (Standard Deviation, std)**：
+   - 反映了振动信号偏离平均值的发散程度。随着轴承磨损加剧，摩擦力和整体机械能量增加，振动信号的整体波动幅度（方差/标准差）会稳定上升。
+4. **峰峰值 (Peak-to-Peak)**：
+   - 信号在一个分析周期内的最大值与最小值的差值。该指标对于剧烈的机械撞击非常敏感，常常用于预警晚期严重故障或断裂。
+
+## 支持向量回归 (Support Vector Regression, SVR) 的原理解析
+
+提取出的这四个多维特征被打包成输入向量，送入 SVR 引擎进行退化轨迹的拟合：
+
+- **核函数映射与高维拟合**：考虑到上述四个特征与轴承真实寿命之间往往存在高度的非线性关系，SVR 内部利用了核函数 (如 RBF 径向基核)，将原始特征映射到了更高维的空间中。
+- **寻找最优超平面 (Hyperplane)**：在高维空间中，SVR 致力于寻找一个最优平面，它不仅要尽可能穿过所有的训练样本点（降低回归误差），还要使得点与点之间存在一个容忍带 ($\epsilon$-tube)。
+- **稀疏性与鲁棒性**：最终模型的决策仅仅依赖于那些落在容忍带边界之外的少数样本（即支持向量，Support Vectors）。这种机制赋予了 SVR 在中小规模数据下极其强大的泛化能力，避免了深度学习模型在数据量不足时极易产生的过拟合问题。
+
+## 适用场景与优势
+该模型能够直接输出原始连续值的剩余寿命指标（例如：`rul_raw = 2.811`），并辅以系统层面的规则换算风险等级。它极大降低了计算资源消耗，在工业现场非平稳风况下依然能提供稳定可靠的寿命衰减预估。

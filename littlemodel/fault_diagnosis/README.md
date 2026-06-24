@@ -34,6 +34,10 @@ This package exposes the default NREL binary fault diagnosis model in a platform
 ```bash
 python inference.py --input test_data/test_sensor1_x.npy --output examples/outputs
 python examples/run_example.py
+python data_check.py
+python smoke_test.py
+python train.py
+python predict.py --input test_data/test_sensor1_x.npy
 ```
 
 ## Notes
@@ -41,3 +45,14 @@ python examples/run_example.py
 - The packaged default is `sensor1_mscnn_bilstm_binary_best.pth`.
 - Voting variants were preserved only as optional artifacts and are not the platform default.
 - The original paper and reproduction summaries are preserved in `docs/`.
+
+## Minimal Runtime Workflow
+
+- `data_check.py`: verifies whether the target HuggingFace dataset can be reached anonymously, and if not, points to `huggingface-cli login` plus the Zenodo fallback.
+- `smoke_test.py`: runs the packaged model on preserved test windows and writes a minimal `outputs/summary.json`.
+- `train.py`: evaluates the packaged checkpoint against preserved labels and writes `outputs/metrics.json` plus `outputs/confusion_matrix.png`.
+- `predict.py`: emits the platform-oriented unified JSON payload.
+
+Current limitation:
+
+- The current repo-local packaged model is `NREL Binary MSCNN-BiLSTM`, not the external `deep-learning-fault-diagnosis` PCA-CNN training repository. The wrapper makes this explicit in logs and summaries instead of masking the difference.

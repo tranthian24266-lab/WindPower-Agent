@@ -1,0 +1,20 @@
+{
+  "module": "fault_prediction_rul",
+  "model_name": "HSSB SVR Multi-feature RUL Prediction Model",
+  "input_file": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\test_data\\split_60_40\\data-20130406T221209Z.mat",
+  "status": "success",
+  "prediction": {
+    "fault_class": null,
+    "fault_probability": null,
+    "health_score": 0.5579692993883714,
+    "is_anomaly": null,
+    "anomaly_score": null,
+    "rul": 27.89846496941857
+  },
+  "artifacts": {
+    "result_json": "outputs\\predict\\result.json",
+    "feature_csv": "outputs\\predict\\feature.csv",
+    "log": "logs\\rul_hsb_run.log"
+  },
+  "error": null
+}

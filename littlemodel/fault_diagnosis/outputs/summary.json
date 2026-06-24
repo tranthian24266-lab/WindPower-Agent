@@ -1,0 +1,18 @@
+{
+  "module": "fault_diagnosis",
+  "model_name": "NREL Binary MSCNN-BiLSTM Fault Diagnosis Model",
+  "data_source": "packaged_test_data",
+  "input_file": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\fault_diagnosis\\test_data\\test_sensor1_x.npy",
+  "status": "success",
+  "metrics": {
+    "accuracy": 0.9775,
+    "f1_score": 0.9774886036055753
+  },
+  "artifacts": {
+    "checkpoint": "weights\\sensor1_mscnn_bilstm_binary_best.pth",
+    "confusion_matrix": "outputs\\confusion_matrix.png",
+    "metrics": "outputs\\metrics.json",
+    "log": "logs\\fault_diagnosis_run.log"
+  },
+  "error": null
+}

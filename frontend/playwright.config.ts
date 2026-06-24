@@ -7,6 +7,7 @@ const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   testDir: "./tests/e2e",
+  workers: 1,
   timeout: 120000,
   expect: {
     timeout: 15000,

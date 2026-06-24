@@ -1,0 +1,4 @@
+[2026-06-18T18:40:55] rul_prediction baseline train wrapper
+[2026-06-18T18:40:55] Data directory: C:\Users\luzian\Desktop\windpower_agent3\littlemodel\rul_prediction\test_data\split_60_40
+[2026-06-18T18:40:55] This wrapper builds a minimal degradation baseline over packaged .mat files. It does not execute the original GRU notebook path by default.
+[2026-06-18T18:40:57] Baseline summary: {'num_files': 20, 'rul_raw_min': -5.549188616831088, 'rul_raw_max': 27.89846496941857, 'rul_raw_mean': 11.477514731804149, 'health_score_mean': 0.23817310869936206}

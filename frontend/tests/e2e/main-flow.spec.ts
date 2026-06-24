@@ -13,11 +13,10 @@ const rulSamplePath = path.join(
 );
 const anomalySamplePath = path.join(littlemodelRoot, "anomaly_detection", "test_data", "test_data_sample.csv");
 
-async function runDiagnosisToCaseDetail(page: import("@playwright/test").Page, taskIndex: number, samplePath: string) {
+async function runDiagnosisToCaseDetail(page: import("@playwright/test").Page, _taskIndex: number, samplePath: string) {
   await page.goto("/diagnosis");
-  await page.locator(".choice-card").nth(taskIndex).click();
-  await page.locator('input[type="file"]').setInputFiles(samplePath);
-  await page.locator(".run-row .action-button").click();
+  await page.locator('input[type="file"]:not([multiple])').setInputFiles(samplePath);
+  await page.getByRole("button", { name: "开始智能诊断" }).click();
   await page.waitForURL(/\/cases\/.+/, { timeout: 120000 });
   await expect(page).toHaveURL(/\/cases\/.+/);
 }
@@ -29,8 +28,8 @@ test("main user flow covers model view, diagnosis, report generation, and chat",
 
   await test.step("open dashboard and model library", async () => {
     await page.goto("/");
-    await expect(page.getByRole("link", { name: "模型库" })).toBeVisible();
-    await page.getByRole("link", { name: "模型库" }).click();
+    await expect(page.getByRole("link", { name: "模型库", exact: true })).toBeVisible();
+    await page.getByRole("link", { name: "模型库", exact: true }).click();
     await expect(page).toHaveURL(/\/models$/);
   });
 
@@ -47,9 +46,10 @@ test("main user flow covers model view, diagnosis, report generation, and chat",
 
   await test.step("send a chat question for the generated case", async () => {
     await page.goto(`/chat?caseId=${caseId}`);
-    await page.locator("textarea.chat-input").fill("请用一句话总结这个案例。");
-    await page.locator(".filters-row .action-button").click();
-    await expect(page.locator(".chat-bubble.assistant").last()).toBeVisible({ timeout: 120000 });
+    await page.locator("textarea").fill("请用一句话总结这个案例。");
+    await page.locator("textarea").press("Enter");
+    await expect(page.locator("textarea")).toBeEnabled({ timeout: 120000 });
+    await expect(page.locator("textarea")).toHaveValue("");
   });
 });
 

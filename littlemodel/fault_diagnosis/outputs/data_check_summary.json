@@ -1,0 +1,12 @@
+{
+  "status": "success",
+  "dataset_id": "alidi/wind-turbine-5mw-bearing-dataset",
+  "zenodo_fallback": "https://doi.org/10.5281/zenodo.7674842",
+  "report": {
+    "status": "success",
+    "mode": "anonymous",
+    "message": "Anonymous access succeeded for dataset alidi/wind-turbine-5mw-bearing-dataset.",
+    "id": "alidi/wind-turbine-5mw-bearing-dataset"
+  },
+  "error": null
+}

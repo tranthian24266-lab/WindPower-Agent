@@ -1,0 +1,65 @@
+{
+  "status": "success",
+  "data_dir": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\test_data",
+  "num_available_files": 50,
+  "samples": [
+    {
+      "file": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\test_data\\split_60_40\\data-20130420T151307Z.mat",
+      "variables": {
+        "tach": {
+          "shape": [
+            2538
+          ],
+          "dtype": "float64",
+          "size": 2538
+        },
+        "vibration": {
+          "shape": [
+            585936
+          ],
+          "dtype": "float64",
+          "size": 585936
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\test_data\\split_40_60\\data-20130408T221809Z.mat",
+      "variables": {
+        "tach": {
+          "shape": [
+            2523
+          ],
+          "dtype": "float64",
+          "size": 2523
+        },
+        "vibration": {
+          "shape": [
+            585936
+          ],
+          "dtype": "float64",
+          "size": 585936
+        }
+      }
+    },
+    {
+      "file": "C:\\Users\\luzian\\Desktop\\windpower_agent3\\littlemodel\\rul_prediction\\test_data\\split_60_40\\data-20130409T231445Z.mat",
+      "variables": {
+        "tach": {
+          "shape": [
+            2409
+          ],
+          "dtype": "float64",
+          "size": 2409
+        },
+        "vibration": {
+          "shape": [
+            585936
+          ],
+          "dtype": "float64",
+          "size": 585936
+        }
+      }
+    }
+  ],
+  "error": null
+}
